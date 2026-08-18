@@ -5223,3 +5223,65 @@ button,
     font-size: 13px;
     line-height: 1.7;
 }
+
+/* =====================================================
+   RELAX — DESKTOP ALIGNMENT FINAL V4
+   ===================================================== */
+
+/*
+ * Remove the transformed containing block after loading.
+ * A transformed ancestor changes how position:fixed descendants
+ * are positioned, which caused bottom controls to drift.
+ */
+.loading-screen.hidden ~ .app .content {
+    transform: none !important;
+}
+
+@keyframes relaxDesktopBottomOpacityIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes relaxDesktopHintOpacityIn {
+    from { opacity: 0; }
+    to   { opacity: 0.68; }
+}
+
+@media (min-width: 901px) {
+
+    .scene-selector {
+        position: fixed !important;
+        left: 50vw !important;
+        right: auto !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .experience-hint {
+        position: fixed !important;
+        left: 50vw !important;
+        right: auto !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: max-content !important;
+        max-width: calc(100vw - 40px);
+        text-align: center !important;
+        white-space: nowrap;
+        transform: translateX(-50%) !important;
+    }
+
+    .loading-screen.hidden ~ .app .scene-selector {
+        animation:
+            relaxDesktopBottomOpacityIn
+            0.75s ease
+            0.85s both !important;
+    }
+
+    .loading-screen.hidden ~ .app .experience-hint {
+        animation:
+            relaxDesktopHintOpacityIn
+            0.75s ease
+            0.72s both !important;
+    }
+}
