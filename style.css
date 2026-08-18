@@ -5141,3 +5141,63 @@ button,
     }
 
 }
+
+/* =====================================================
+   RELAX — DESKTOP EXPERIENCE HINT TRUE CENTER V2
+   ===================================================== */
+
+/*
+ * Older CSS contained:
+ * left: calc(50% - 215px);
+ * transform: none;
+ *
+ * That rule intentionally shifted the hint and survived the first fix.
+ * Force the real viewport center here.
+ */
+@media (min-width: 901px) {
+
+    .experience-hint {
+        position: fixed !important;
+
+        left: 50% !important;
+        right: auto !important;
+
+        bottom: 14px;
+
+        width: max-content;
+
+        text-align: center !important;
+        white-space: nowrap;
+
+        transform:
+            translateX(-50%) !important;
+    }
+
+    .loading-screen.hidden ~ .app .experience-hint {
+        animation:
+            relaxExperienceHintTrueCenter
+            1s ease
+            0.72s both !important;
+    }
+
+}
+
+@keyframes relaxExperienceHintTrueCenter {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(14px);
+    }
+
+    to {
+        opacity: 0.68;
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+}
