@@ -499,6 +499,8 @@ function switchVideo(videoPath) {
     // НИКАКИХ скрытых preload-video.
     // Загружаем ролик непосредственно
     // в реальный видеослой.
+    incoming.preload = "auto";
+
     incoming.src =
         getVideoUrl(videoPath);
 
@@ -584,19 +586,24 @@ function switchVideo(videoPath) {
 
                 videoTransitionTimer = null;
 
-            }, 700);
+            }, 450);
 
     };
 
 
-    if (incoming.readyState >= 3) {
+    /*
+     * Для визуального отклика не ждём canplay.
+     * loadeddata приходит раньше: первый кадр уже доступен,
+     * а воспроизведение браузер продолжит буферизовать сам.
+     */
+    if (incoming.readyState >= 2) {
 
         startPlayback();
 
     } else {
 
         incoming.addEventListener(
-            "canplay",
+            "loadeddata",
             startPlayback,
             { once: true }
         );
@@ -777,7 +784,7 @@ if (activeSceneButton) {
             }
         ],
         {
-            duration: 520,
+            duration: 280,
             easing:
                 "cubic-bezier(0.22, 1, 0.36, 1)"
         }
@@ -809,7 +816,7 @@ const railOutAnimation =
             }
         ],
         {
-            duration: 180,
+            duration: 90,
             easing: "ease-in",
             fill: "forwards"
         }
@@ -850,7 +857,7 @@ railOutAnimation.finished
                 }
             ],
             {
-                duration: 360,
+                duration: 220,
                 easing:
                     "cubic-bezier(0.22, 1, 0.36, 1)",
                 fill: "forwards"
@@ -915,7 +922,7 @@ function updateText(scene) {
 
         });
 
-    }, 380);
+    }, 140);
 
 }
 // =====================================================
@@ -923,6 +930,43 @@ function updateText(scene) {
 // =====================================================
 
 sceneButtons.forEach(button => {
+
+    button.addEventListener(
+        "pointerdown",
+        () => {
+
+            const sceneName =
+                button.dataset.scene;
+
+            const scene =
+                sceneVariants[sceneName]?.[
+                    currentVariants[sceneName]
+                ];
+
+            if (
+                !scene ||
+                sceneName === currentScene
+            ) {
+                return;
+            }
+
+            /*
+             * Начинаем сетевую загрузку немного раньше —
+             * ещё в момент касания/нажатия.
+             */
+            const url =
+                getVideoUrl(scene.video);
+
+            if (
+                nextVideo.src !== url &&
+                !nextVideo.src.endsWith(url)
+            ) {
+                nextVideo.preload = "auto";
+            }
+
+        },
+        { passive: true }
+    );
 
     button.addEventListener(
         "click",
