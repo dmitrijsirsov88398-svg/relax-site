@@ -210,11 +210,50 @@ let videoTransitionTimer = null;
 // VOLUME CONTROLS
 // =====================================================
 
+function clampVolume(value) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return 0;
+    }
+
+    return Math.min(1, Math.max(0, number));
+}
+
+
+function sliderValueToVolume(value) {
+    const min = Number(volumeSlider.min || 0);
+    const max = Number(volumeSlider.max || 1);
+    const number = Number(value);
+
+    if (!Number.isFinite(number) || max <= min) {
+        return audioVolume;
+    }
+
+    return clampVolume(
+        (number - min) / (max - min)
+    );
+}
+
+
+function volumeToSliderValue(volume) {
+    const min = Number(volumeSlider.min || 0);
+    const max = Number(volumeSlider.max || 1);
+
+    if (max <= min) {
+        return volume;
+    }
+
+    return min + clampVolume(volume) * (max - min);
+}
+
+
 function updateVolumeUI() {
 
     const percent = Math.round(audioVolume * 100);
 
-    volumeSlider.value = audioVolume;
+    volumeSlider.value =
+        volumeToSliderValue(audioVolume);
 
     volumeValue.textContent = `${percent}%`;
 
@@ -241,30 +280,19 @@ function updateVolumeUI() {
 
 volumeSlider.addEventListener(
     "input",
-    async () => {
+    () => {
 
-        audioVolume = Number(volumeSlider.value);
+        audioVolume =
+            sliderValueToVolume(
+                volumeSlider.value
+            );
 
         muted = false;
 
         if (currentAudio) {
 
-            currentAudio.volume = audioVolume;
-
-        } else if (playing) {
-
-            const scene = getCurrentSceneData();
-
-            if (scene && scene.audio) {
-
-                transitionId++;
-
-                startSceneAudio(
-                    scene.audio,
-                    transitionId
-                );
-
-            }
+            currentAudio.volume =
+                audioVolume;
 
         }
 
@@ -294,9 +322,7 @@ muteButton.addEventListener(
 
 
 updateVolumeUI();
-// =====================================================
-// AUDIO
-// =====================================================
+
 
 // =====================================================
 // AUDIO
@@ -307,99 +333,14 @@ function createAudio(path) {
     const audio = new Audio(path);
 
     audio.loop = true;
-    audio.volume = 0;
     audio.preload = "auto";
 
+    // Ставим актуальную громкость сразу.
+    // Это убирает конфликт ползунка с fade-анимацией.
+    audio.volume =
+        muted ? 0 : audioVolume;
+
     return audio;
-}
-
-
-function fadeAudio(
-    audio,
-    target,
-    duration = 500,
-    isValid = null
-) {
-
-    return new Promise(resolve => {
-
-        if (!audio) {
-            resolve();
-            return;
-        }
-
-        const clamp = value =>
-            Math.min(
-                1,
-                Math.max(
-                    0,
-                    Number(value) || 0
-                )
-            );
-
-
-        target = clamp(target);
-
-        const startVolume =
-            clamp(audio.volume);
-
-        const difference =
-            target - startVolume;
-
-        const startTime =
-            performance.now();
-
-
-        function step(now) {
-
-            if (
-                isValid &&
-                !isValid()
-            ) {
-
-                resolve();
-                return;
-
-            }
-
-
-            const progress =
-                Math.min(
-                    Math.max(
-                        (now - startTime) /
-                        duration,
-                        0
-                    ),
-                    1
-                );
-
-
-            audio.volume =
-                clamp(
-                    startVolume +
-                    difference * progress
-                );
-
-
-            if (progress < 1) {
-
-                requestAnimationFrame(step);
-
-            } else {
-
-                audio.volume = target;
-
-                resolve();
-
-            }
-
-        }
-
-
-        requestAnimationFrame(step);
-
-    });
-
 }
 
 
@@ -437,7 +378,7 @@ async function startSceneAudio(
     }
 
 
-    // Старый звук выключаем сразу
+    // Старый звук выключаем сразу.
     if (currentAudio) {
 
         const oldAudio =
@@ -459,6 +400,13 @@ async function startSceneAudio(
     const audio =
         createAudio(audioPath);
 
+    /*
+     * Важно: назначаем currentAudio ДО await audio.play().
+     * Тогда ползунок уже управляет новым звуком,
+     * даже пока мобильный браузер запускает аудио.
+     */
+    currentAudio = audio;
+
 
     try {
 
@@ -466,44 +414,17 @@ async function startSceneAudio(
 
     } catch (error) {
 
-        return;
-
-    }
-
-
-    // Пока файл запускался,
-    // пользователь мог выбрать другую сцену
-    if (
-        id !== transitionId ||
-        !playing
-    ) {
-
-        audio.pause();
-
-        try {
-            audio.currentTime = 0;
-        } catch (error) {}
+        if (currentAudio === audio) {
+            currentAudio = null;
+        }
 
         return;
 
     }
 
 
-    currentAudio = audio;
-
-
-    await fadeAudio(
-        audio,
-        muted ? 0 : audioVolume,
-        450,
-        () =>
-            id === transitionId &&
-            playing &&
-            currentAudio === audio
-    );
-
-
-    // Если во время fade сцена уже сменилась
+    // Пока браузер запускал файл,
+    // пользователь мог выбрать другую сцену.
     if (
         id !== transitionId ||
         !playing ||
@@ -522,7 +443,15 @@ async function startSceneAudio(
             currentAudio = null;
         }
 
+        return;
+
     }
+
+
+    // За время await пользователь мог
+    // изменить громкость или mute.
+    audio.volume =
+        muted ? 0 : audioVolume;
 
 }
 
