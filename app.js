@@ -561,11 +561,45 @@ async function startSceneAudio(
 
     } catch (error) {
 
-        if (currentAudio === audio) {
-            currentAudio = null;
-        }
+        /*
+         * На перегруженных мобильных браузерах play() иногда
+         * временно падает с AbortError/ресурсной ошибкой.
+         * Если переход всё ещё актуален — пробуем один раз ещё.
+         */
+        if (
+            id === transitionId &&
+            playing &&
+            currentAudio === audio &&
+            error?.name !== "NotAllowedError"
+        ) {
 
-        return;
+            await new Promise(resolve => {
+                setTimeout(resolve, 120);
+            });
+
+            try {
+
+                await audio.play();
+
+            } catch (retryError) {
+
+                if (currentAudio === audio) {
+                    currentAudio = null;
+                }
+
+                return;
+
+            }
+
+        } else {
+
+            if (currentAudio === audio) {
+                currentAudio = null;
+            }
+
+            return;
+
+        }
 
     }
 
@@ -605,12 +639,44 @@ async function startSceneAudio(
 // =====================================================
 // VIDEO
 // =====================================================
-const VIDEO_VERSION = 7;
+const VIDEO_VERSION = 8;
+
+/*
+ * Mobile performance mode.
+ *
+ * Phones/touch devices use lightweight 720p/24 FPS files from
+ * assets/video/mobile/. Desktop keeps the original optimized files.
+ */
+const MOBILE_VIDEO_MEDIA = window.matchMedia(
+    "(max-width: 900px), (hover: none) and (pointer: coarse)"
+);
+
+
+function isMobilePerformanceMode() {
+    return MOBILE_VIDEO_MEDIA.matches;
+}
+
+
+function getRuntimeVideoPath(videoPath) {
+
+    if (!isMobilePerformanceMode()) {
+        return videoPath;
+    }
+
+    return videoPath.replace(
+        "assets/video/optimized/",
+        "assets/video/mobile/"
+    );
+
+}
 
 
 function getVideoUrl(videoPath) {
 
-    return `${videoPath}?v=${VIDEO_VERSION}`;
+    const runtimePath =
+        getRuntimeVideoPath(videoPath);
+
+    return `${runtimePath}?v=${VIDEO_VERSION}`;
 
 }
 	
@@ -715,6 +781,9 @@ function switchVideo(videoPath) {
     const incoming = nextVideo;
     const outgoing = currentVideo;
 
+    const lowPowerMode =
+        isMobilePerformanceMode();
+
     let started = false;
 
 
@@ -732,6 +801,16 @@ function switchVideo(videoPath) {
     // Особенно важно после быстрого переключения
     // или возвращения из другой вкладки.
     clearPendingVideoReady(incoming);
+
+
+    /*
+     * На телефоне сразу останавливаем декодирование старого видео.
+     * Последний кадр остаётся на экране, пока новое видео грузится,
+     * но два ролика одновременно уже не декодируются.
+     */
+    if (lowPowerMode && outgoing) {
+        outgoing.pause();
+    }
 
 
     incoming.pause();
@@ -793,45 +872,87 @@ function switchVideo(videoPath) {
         nextVideo = outgoing;
 
 
-        safePlayVideo(incoming);
+        if (lowPowerMode) {
 
+            /*
+             * Mobile: мгновенная замена после появления первого кадра.
+             * Старый ролик уже стоит на паузе, поэтому одновременно
+             * декодируется только новый.
+             */
+            incoming.style.transition = "none";
+            incoming.style.opacity = "1";
 
-        requestAnimationFrame(() => {
+            outgoing.style.opacity = "0";
+            outgoing.style.visibility = "hidden";
+
+            outgoing.classList.remove(
+                "active"
+            );
+
+            safePlayVideo(incoming);
+
+            /*
+             * Освобождаем декодер/память старого мобильного файла.
+             * Элемент останется и будет переиспользован при следующей сцене.
+             */
+            outgoing.removeAttribute("src");
+
+            try {
+                outgoing.load();
+            } catch (error) {}
+
+            requestAnimationFrame(() => {
+                incoming.style.transition = "";
+            });
+
+            videoTransitionTimer = null;
+
+        } else {
+
+            /*
+             * Desktop: сохраняем красивый короткий crossfade.
+             */
+            safePlayVideo(incoming);
+
 
             requestAnimationFrame(() => {
 
-                if (id !== transitionId) {
-                    return;
-                }
+                requestAnimationFrame(() => {
 
-                incoming.style.opacity = "1";
-                outgoing.style.opacity = "0";
+                    if (id !== transitionId) {
+                        return;
+                    }
+
+                    incoming.style.opacity = "1";
+                    outgoing.style.opacity = "0";
+
+                });
 
             });
 
-        });
 
+            videoTransitionTimer =
+                setTimeout(() => {
 
-        videoTransitionTimer =
-            setTimeout(() => {
+                    if (id !== transitionId) {
+                        return;
+                    }
 
-                if (id !== transitionId) {
-                    return;
-                }
+                    outgoing.pause();
 
-                outgoing.pause();
+                    outgoing.classList.remove(
+                        "active"
+                    );
 
-                outgoing.classList.remove(
-                    "active"
-                );
+                    outgoing.style.opacity = "0";
+                    outgoing.style.visibility =
+                        "hidden";
 
-                outgoing.style.opacity = "0";
-                outgoing.style.visibility =
-                    "hidden";
+                    videoTransitionTimer = null;
 
-                videoTransitionTimer = null;
+                }, 450);
 
-            }, 450);
+        }
 
     };
 
@@ -1440,45 +1561,66 @@ sceneButtons.forEach(button => {
 const mouseGlow =
     document.querySelector(".mouse-glow");
 
-let mouseX = 0;
-let mouseY = 0;
-
-let glowX = 0;
-let glowY = 0;
-
-
-document.addEventListener(
-    "mousemove",
-    (event) => {
-
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-
-        mouseGlow.style.opacity = "1";
-
-    }
-);
-
-
-function animateMouseGlow() {
-
-    glowX +=
-        (mouseX - glowX) * 0.08;
-
-    glowY +=
-        (mouseY - glowY) * 0.08;
-
-    mouseGlow.style.transform =
-        `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
-
-    requestAnimationFrame(
-        animateMouseGlow
+const FINE_POINTER_MEDIA =
+    window.matchMedia(
+        "(hover: hover) and (pointer: fine)"
     );
 
+
+if (
+    mouseGlow &&
+    FINE_POINTER_MEDIA.matches
+) {
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    let glowX = 0;
+    let glowY = 0;
+
+
+    document.addEventListener(
+        "mousemove",
+        (event) => {
+
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+
+            mouseGlow.style.opacity = "1";
+
+        },
+        { passive: true }
+    );
+
+
+    function animateMouseGlow() {
+
+        glowX +=
+            (mouseX - glowX) * 0.08;
+
+        glowY +=
+            (mouseY - glowY) * 0.08;
+
+        mouseGlow.style.transform =
+            `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
+
+        requestAnimationFrame(
+            animateMouseGlow
+        );
+
+    }
+
+
+    animateMouseGlow();
+
+} else if (mouseGlow) {
+
+    /*
+     * Не запускаем бесконечный requestAnimationFrame на телефоне.
+     */
+    mouseGlow.style.display = "none";
+
 }
-
-
-animateMouseGlow();
 
 // =====================================================
 // TAB / PAGE VISIBILITY RECOVERY
