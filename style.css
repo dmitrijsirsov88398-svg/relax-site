@@ -1,4 +1,4 @@
-﻿* {
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -4970,4 +4970,134 @@ button,
 .scene-rail-item[data-variant="storm"]::before {
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2012h11a4%204%200%200%200%20.5-7.8A5.5%205.5%200%200%200%207%205.7%203.5%203.5%200%200%200%206%2012Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2012-3%205h3l-1%204%204-7h-3l1-2Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019c2%200%202%201.5%204%201.5%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2012h11a4%204%200%200%200%20.5-7.8A5.5%205.5%200%200%200%207%205.7%203.5%203.5%200%200%200%206%2012Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2012-3%205h3l-1%204%204-7h-3l1-2Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019c2%200%202%201.5%204%201.5%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+/* =====================================================
+   RELAX — MOBILE PERFORMANCE MODE V1
+   ===================================================== */
+
+/*
+ * FIX: desktop bottom navigation animation must preserve
+ * translateX(-50%), otherwise the whole menu shifts right.
+ */
+@keyframes relaxSceneSelectorDesktopIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+}
+
+@media (min-width: 1101px) {
+
+    .loading-screen.hidden ~ .app .scene-selector {
+        animation:
+            relaxSceneSelectorDesktopIn
+            1s ease
+            0.85s both !important;
+    }
+
+}
+
+
+/*
+ * Mobile / touch performance.
+ * Video brightness is moved from a real-time video filter into
+ * the ordinary overlay, which is considerably cheaper on phones.
+ */
+@media
+    (max-width: 900px),
+    (hover: none) and (pointer: coarse) {
+
+    .background-video {
+        filter: none !important;
+
+        will-change: auto !important;
+
+        transition:
+            opacity 0.12s linear !important;
+    }
+
+    .overlay {
+        background:
+            linear-gradient(
+                rgba(0,0,0,0.24),
+                rgba(0,0,0,0.24)
+            ),
+            radial-gradient(
+                circle at center,
+                transparent 15%,
+                rgba(0,0,0,0.58) 100%
+            ) !important;
+
+        box-shadow:
+            inset 0 0 110px
+            rgba(0,0,0,0.42) !important;
+    }
+
+    /*
+     * backdrop-filter is attractive but expensive on a moving
+     * fullscreen video. Keep translucent surfaces, remove live blur.
+     */
+    .scene,
+    .scene-rail,
+    .scene-rail-item,
+    .audio-controls,
+    .volume-toggle,
+    .mute-button,
+    .secret-eyes {
+        backdrop-filter:
+            none !important;
+
+        -webkit-backdrop-filter:
+            none !important;
+    }
+
+    /*
+     * Continuous glow animations also consume GPU time while the
+     * video is playing. Static active-state styling remains.
+     */
+    .scene.active::before,
+    .scene-rail-item.active .scene-rail-dot {
+        animation:
+            none !important;
+    }
+
+    .mouse-glow {
+        display:
+            none !important;
+    }
+
+}
+
+
+/*
+ * Short landscape phones: avoid extra motion/transforms during
+ * navigation so taps remain responsive while a new video is loading.
+ */
+@media
+    (orientation: landscape)
+    and (max-height: 600px)
+    and (max-width: 1100px) {
+
+    .scene,
+    .scene-rail-item,
+    .play-button,
+    .volume-toggle {
+        transition-duration:
+            0.12s !important;
+    }
+
 }
