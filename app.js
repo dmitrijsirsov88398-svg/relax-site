@@ -206,6 +206,11 @@ let audioVolume = 0.50;
 let muted = false;
 let videoTransitionTimer = null;
 
+// Храним ожидающие обработчики загрузки для двух видеослоёв.
+// Это не даёт старому loadeddata от предыдущего переключения
+// вмешаться в новое переключение после возврата на вкладку.
+const videoReadyHandlers = new Map();
+
 // =====================================================
 // VOLUME CONTROLS
 // =====================================================
@@ -467,6 +472,100 @@ function getVideoUrl(videoPath) {
 
 }
 	
+function clearPendingVideoReady(video) {
+
+    const handler =
+        videoReadyHandlers.get(video);
+
+    if (!handler) {
+        return;
+    }
+
+    video.removeEventListener(
+        "loadeddata",
+        handler
+    );
+
+    videoReadyHandlers.delete(video);
+
+}
+
+
+function safePlayVideo(video) {
+
+    if (
+        !video ||
+        !playing ||
+        document.hidden
+    ) {
+        return;
+    }
+
+    const promise = video.play();
+
+    if (
+        promise &&
+        typeof promise.catch === "function"
+    ) {
+        promise.catch(() => {});
+    }
+
+}
+
+
+function recoverCurrentMedia() {
+
+    if (
+        !playing ||
+        document.hidden
+    ) {
+        return;
+    }
+
+    /*
+     * Некоторые браузеры при уходе на другую вкладку
+     * автоматически приостанавливают video.
+     * Наше состояние playing при этом остаётся true.
+     * Поэтому при возврате явно продолжаем активный слой.
+     */
+    if (currentVideo) {
+
+        if (
+            currentVideo.readyState === 0 &&
+            currentVideo.src
+        ) {
+            currentVideo.load();
+        }
+
+        safePlayVideo(currentVideo);
+
+    }
+
+
+    /*
+     * Аналогично восстанавливаем текущий звук,
+     * если браузер его приостановил.
+     */
+    if (
+        currentAudio &&
+        currentAudio.paused
+    ) {
+
+        const promise =
+            currentAudio.play();
+
+        if (
+            promise &&
+            typeof promise.catch === "function"
+        ) {
+            promise.catch(() => {});
+        }
+
+    }
+
+}
+
+
 function switchVideo(videoPath) {
 
     const id = transitionId;
@@ -474,8 +573,10 @@ function switchVideo(videoPath) {
     const incoming = nextVideo;
     const outgoing = currentVideo;
 
+    let started = false;
 
-    // Отменяем старый незавершённый переход
+
+    // Отменяем старый незавершённый визуальный переход.
     if (videoTransitionTimer) {
 
         clearTimeout(videoTransitionTimer);
@@ -485,8 +586,12 @@ function switchVideo(videoPath) {
     }
 
 
-    // Второй слой полностью скрываем
-    // перед загрузкой нового видео
+    // Удаляем старый loadeddata с этого слоя.
+    // Особенно важно после быстрого переключения
+    // или возвращения из другой вкладки.
+    clearPendingVideoReady(incoming);
+
+
     incoming.pause();
 
     incoming.classList.remove("active");
@@ -495,10 +600,6 @@ function switchVideo(videoPath) {
     incoming.style.opacity = "0";
     incoming.style.visibility = "hidden";
 
-
-    // НИКАКИХ скрытых preload-video.
-    // Загружаем ролик непосредственно
-    // в реальный видеослой.
     incoming.preload = "auto";
 
     incoming.src =
@@ -509,44 +610,48 @@ function switchVideo(videoPath) {
 
     const startPlayback = () => {
 
-        if (id !== transitionId) {
+        if (
+            started ||
+            id !== transitionId
+        ) {
             return;
         }
 
+        started = true;
 
-        // Не показываем первый чёрный кадр
+        clearPendingVideoReady(incoming);
+
+
+        // Не показываем первый чёрный кадр.
         try {
 
-            incoming.currentTime = 0.35;
+            if (incoming.duration > 0.35) {
+                incoming.currentTime = 0.35;
+            }
 
         } catch (error) {}
 
 
-        if (playing) {
-
-            incoming
-                .play()
-                .catch(() => {});
-
-        }
-
-
+        /*
+         * Показываем слой сразу, а play() запускаем безопасно.
+         * Если вкладка в фоне — воспроизведение восстановится
+         * через visibilitychange после возврата пользователя.
+         */
         incoming.classList.add("active");
 
         incoming.style.opacity = "0";
         incoming.style.visibility = "visible";
 
-
-        // Принудительно применяем скрытое состояние
         void incoming.offsetWidth;
-
 
         incoming.style.transition = "";
 
 
-        // Сразу фиксируем новый текущий слой
         currentVideo = incoming;
         nextVideo = outgoing;
+
+
+        safePlayVideo(incoming);
 
 
         requestAnimationFrame(() => {
@@ -558,7 +663,6 @@ function switchVideo(videoPath) {
                 }
 
                 incoming.style.opacity = "1";
-
                 outgoing.style.opacity = "0";
 
             });
@@ -580,7 +684,6 @@ function switchVideo(videoPath) {
                 );
 
                 outgoing.style.opacity = "0";
-
                 outgoing.style.visibility =
                     "hidden";
 
@@ -591,25 +694,37 @@ function switchVideo(videoPath) {
     };
 
 
-    /*
-     * Для визуального отклика не ждём canplay.
-     * loadeddata приходит раньше: первый кадр уже доступен,
-     * а воспроизведение браузер продолжит буферизовать сам.
-     */
     if (incoming.readyState >= 2) {
 
         startPlayback();
 
     } else {
 
+        const handleLoadedData = () => {
+
+            videoReadyHandlers.delete(
+                incoming
+            );
+
+            startPlayback();
+
+        };
+
+        videoReadyHandlers.set(
+            incoming,
+            handleLoadedData
+        );
+
         incoming.addEventListener(
             "loadeddata",
-            startPlayback,
+            handleLoadedData,
             { once: true }
         );
 
     }
+
 }
+
 // =====================================================
 // CURRENT SCENE DATA
 // =====================================================
@@ -1076,9 +1191,9 @@ playButton.addEventListener(
 
             playing = true;
 
-            currentVideo
-                .play()
-                .catch(() => {});
+            safePlayVideo(
+                currentVideo
+            );
 
 const scene =
     getCurrentSceneData();
@@ -1222,6 +1337,57 @@ function animateMouseGlow() {
 
 
 animateMouseGlow();
+
+// =====================================================
+// TAB / PAGE VISIBILITY RECOVERY
+// =====================================================
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (!document.hidden) {
+
+            requestAnimationFrame(() => {
+
+                setTimeout(
+                    recoverCurrentMedia,
+                    80
+                );
+
+            });
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "pageshow",
+    () => {
+
+        setTimeout(
+            recoverCurrentMedia,
+            80
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    "focus",
+    () => {
+
+        setTimeout(
+            recoverCurrentMedia,
+            80
+        );
+
+    }
+);
+
 
 // =====================================================
 // LOADING SCREEN
