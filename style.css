@@ -1,4 +1,4 @@
-﻿* {
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -5200,4 +5200,26 @@ button,
             translateY(0);
     }
 
+}
+
+/* ================= SEO INTRO ================= */
+
+.seo-intro {
+    max-width: 760px;
+    margin: 80px auto 40px;
+    padding: 0 24px;
+    text-align: center;
+    opacity: 0.55;
+}
+
+.seo-intro h1 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.seo-intro p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
 }
