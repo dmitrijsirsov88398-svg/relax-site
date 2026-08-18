@@ -1,4 +1,4 @@
-* {
+﻿* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -5098,6 +5098,46 @@ button,
     .volume-toggle {
         transition-duration:
             0.12s !important;
+    }
+
+}
+
+/* =====================================================
+   RELAX — DESKTOP EXPERIENCE HINT CENTER FIX
+   ===================================================== */
+
+/*
+ * .experience-hint is centered with left: 50% + translateX(-50%).
+ * The generic relaxFadeInUp animation overwrote transform and moved
+ * the hint to the right. This dedicated animation preserves centering.
+ */
+@keyframes relaxExperienceHintDesktopIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(14px);
+    }
+
+    to {
+        opacity: 0.68;
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+}
+
+@media (min-width: 901px) {
+
+    .loading-screen.hidden ~ .app .experience-hint {
+        animation:
+            relaxExperienceHintDesktopIn
+            1s ease
+            0.72s both !important;
     }
 
 }
