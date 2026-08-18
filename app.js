@@ -6,6 +6,11 @@ const muteButton = document.querySelector("#muteButton");
 const volumeSlider = document.querySelector("#volumeSlider");
 const volumeValue = document.querySelector("#volumeValue");
 
+const audioShell = document.querySelector("#audioShell");
+const audioPanel = document.querySelector("#audioPanel");
+const volumeToggle = document.querySelector("#volumeToggle");
+const volumeToggleIcon = document.querySelector("#volumeToggleIcon");
+
 const sceneTitle = document.querySelector("#sceneTitle");
 const sceneDescription = document.querySelector("#sceneDescription");
 const sceneInfo = document.querySelector(".scene-info");
@@ -262,22 +267,35 @@ function updateVolumeUI() {
 
     volumeValue.textContent = `${percent}%`;
 
+    let icon = "🔊";
+
     if (muted || audioVolume === 0) {
 
-        muteButton.textContent = "🔇";
+        icon = "🔇";
 
     } else if (audioVolume < 0.35) {
 
-        muteButton.textContent = "🔈";
+        icon = "🔈";
 
     } else if (audioVolume < 0.7) {
 
-        muteButton.textContent = "🔉";
+        icon = "🔉";
 
-    } else {
+    }
 
-        muteButton.textContent = "🔊";
+    muteButton.textContent = icon;
 
+    if (volumeToggleIcon) {
+        volumeToggleIcon.textContent = icon;
+    }
+
+    if (volumeToggle) {
+        volumeToggle.setAttribute(
+            "aria-label",
+            muted
+                ? "Открыть громкость — звук выключен"
+                : `Открыть громкость — ${percent}%`
+        );
     }
 
 }
@@ -324,6 +342,130 @@ muteButton.addEventListener(
 
     }
 );
+
+
+// =====================================================
+// COMPACT VOLUME PANEL — TOUCH / MOBILE
+// =====================================================
+
+const compactAudioMedia = window.matchMedia(
+    "(max-width: 768px), (hover: none) and (pointer: coarse)"
+);
+
+
+function isCompactAudioMode() {
+    return compactAudioMedia.matches;
+}
+
+
+function setVolumePanelOpen(open) {
+
+    if (!audioShell || !volumeToggle) {
+        return;
+    }
+
+    const shouldOpen =
+        Boolean(open && isCompactAudioMode());
+
+    audioShell.classList.toggle(
+        "is-open",
+        shouldOpen
+    );
+
+    volumeToggle.setAttribute(
+        "aria-expanded",
+        String(shouldOpen)
+    );
+
+}
+
+
+if (
+    audioShell &&
+    volumeToggle &&
+    audioPanel
+) {
+
+    volumeToggle.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            setVolumePanelOpen(
+                !audioShell.classList.contains(
+                    "is-open"
+                )
+            );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "pointerdown",
+        event => {
+
+            if (
+                !isCompactAudioMode() ||
+                !audioShell.classList.contains(
+                    "is-open"
+                ) ||
+                audioShell.contains(event.target)
+            ) {
+                return;
+            }
+
+            setVolumePanelOpen(false);
+
+        },
+        { passive: true }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+                setVolumePanelOpen(false);
+            }
+
+        }
+    );
+
+
+    const handleCompactAudioChange = () => {
+
+        if (!isCompactAudioMode()) {
+            setVolumePanelOpen(false);
+        }
+
+    };
+
+
+    if (
+        typeof compactAudioMedia.addEventListener ===
+        "function"
+    ) {
+
+        compactAudioMedia.addEventListener(
+            "change",
+            handleCompactAudioChange
+        );
+
+    } else if (
+        typeof compactAudioMedia.addListener ===
+        "function"
+    ) {
+
+        compactAudioMedia.addListener(
+            handleCompactAudioChange
+        );
+
+    }
+
+}
 
 
 updateVolumeUI();

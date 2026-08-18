@@ -4310,3 +4310,664 @@ button,
 
 }
 
+/* =====================================================
+   RELAX — VARIANT ICONS + COMPACT VOLUME V1
+   ===================================================== */
+
+/* ---------- Variant buttons: stronger readability ---------- */
+
+.scene-rail-item {
+    isolation: isolate;
+
+    border:
+        1px solid rgba(255,255,255,0.13);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(5,5,5,0.40),
+            rgba(5,5,5,0.24)
+        );
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.025);
+
+    text-shadow:
+        0 2px 10px rgba(0,0,0,0.72);
+}
+
+.scene-rail-item::before {
+    content: "";
+
+    width: 17px;
+    height: 17px;
+
+    flex: 0 0 17px;
+
+    margin-right: 10px;
+
+    background:
+        rgba(255,255,255,0.68);
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    opacity: 0.82;
+
+    transition:
+        opacity 0.28s ease,
+        background 0.28s ease,
+        transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.28s ease;
+}
+
+.scene-rail-item .scene-rail-text strong {
+    color:
+        rgba(255,255,255,0.86);
+
+    text-shadow:
+        0 2px 10px rgba(0,0,0,0.90);
+}
+
+.scene-rail-item .scene-rail-text small {
+    color:
+        rgba(255,255,255,0.56);
+
+    text-shadow:
+        0 2px 9px rgba(0,0,0,0.90);
+}
+
+.scene-rail-item:hover::before {
+    opacity: 1;
+
+    background:
+        rgba(255,255,255,0.92);
+
+    transform:
+        scale(1.07);
+}
+
+.scene-rail-item.active {
+    border-color:
+        rgba(255,255,255,0.46);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.16),
+            rgba(255,255,255,0.055)
+        );
+
+    box-shadow:
+        0 9px 28px rgba(0,0,0,0.20),
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 0 20px rgba(255,255,255,0.035);
+}
+
+.scene-rail-item.active::before {
+    opacity: 1;
+
+    background:
+        #fff;
+
+    transform:
+        scale(1.10);
+
+    filter:
+        drop-shadow(
+            0 0 7px rgba(255,255,255,0.28)
+        );
+}
+
+.scene-rail-item.active .scene-rail-text strong {
+    color: #fff;
+}
+
+
+/* ---------- Audio wrapper ---------- */
+
+.audio-shell {
+    position: fixed;
+
+    top: 50%;
+    right:
+        max(
+            24px,
+            env(safe-area-inset-right)
+        );
+
+    left: auto;
+    bottom: auto;
+
+    z-index: 30;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+
+    transform:
+        translateY(-50%);
+}
+
+.volume-toggle {
+    display: none;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid rgba(255,255,255,0.22);
+
+    border-radius: 50%;
+
+    background:
+        rgba(7,7,7,0.34);
+
+    color: #fff;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.22),
+        inset 0 0 0 1px rgba(255,255,255,0.025);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    cursor: pointer;
+
+    touch-action:
+        manipulation;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    transition:
+        transform 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.volume-toggle:hover {
+    background:
+        rgba(255,255,255,0.11);
+
+    border-color:
+        rgba(255,255,255,0.40);
+}
+
+.volume-toggle:active {
+    transform:
+        scale(0.94);
+}
+
+.volume-toggle-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+    line-height: 1;
+
+    filter:
+        grayscale(1)
+        brightness(1.35);
+}
+
+
+/*
+ * Desktop keeps the current always-visible vertical control.
+ * It is now positioned by .audio-shell so older device rules
+ * cannot pull the slider away from the wrapper.
+ */
+.audio-shell .audio-controls {
+    position: static;
+
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+
+    width: 58px;
+    height: 220px;
+
+    margin: 0;
+    padding: 14px 8px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    transform: none;
+
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* ---------- Compact audio on phones / touch devices ---------- */
+
+@media
+    (max-width: 768px),
+    (hover: none) and (pointer: coarse) {
+
+    .audio-shell {
+        position: relative;
+
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+
+        z-index: 35;
+
+        margin-top: 16px;
+
+        transform: none;
+    }
+
+    .volume-toggle {
+        display: flex;
+    }
+
+    .audio-shell .audio-controls {
+        position: absolute;
+
+        left: 50%;
+        top:
+            calc(100% + 9px);
+
+        right: auto;
+        bottom: auto;
+
+        width:
+            min(266px, 84vw);
+
+        height: 56px;
+
+        margin: 0;
+        padding: 7px 9px;
+
+        flex-direction: row;
+
+        gap: 9px;
+
+        border:
+            1px solid rgba(255,255,255,0.20);
+
+        border-radius: 999px;
+
+        background:
+            rgba(7,7,7,0.76);
+
+        box-shadow:
+            0 16px 42px rgba(0,0,0,0.32),
+            inset 0 1px 0 rgba(255,255,255,0.035);
+
+        backdrop-filter:
+            blur(20px);
+
+        -webkit-backdrop-filter:
+            blur(20px);
+
+        opacity: 0 !important;
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transform:
+            translateX(-50%)
+            translateY(-6px)
+            scale(0.96);
+
+        transform-origin:
+            center top;
+
+        transition:
+            opacity 0.20s ease,
+            visibility 0.20s ease,
+            transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+
+        animation:
+            none !important;
+    }
+
+    .audio-shell.is-open .audio-controls {
+        opacity: 1 !important;
+        visibility: visible;
+
+        pointer-events: auto;
+
+        transform:
+            translateX(-50%)
+            translateY(0)
+            scale(1);
+    }
+
+    .audio-shell.is-open .volume-toggle {
+        border-color:
+            rgba(255,255,255,0.46);
+
+        background:
+            rgba(255,255,255,0.12);
+
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.26),
+            0 0 22px rgba(255,255,255,0.055);
+    }
+
+    .audio-shell .audio-controls .mute-button {
+        width: 40px;
+        height: 40px;
+
+        flex: 0 0 40px;
+
+        margin: 0;
+
+        font-size: 14px;
+    }
+
+    .audio-shell .audio-controls .volume-track {
+        position: relative;
+
+        width:
+            clamp(
+                105px,
+                32vw,
+                150px
+            );
+
+        height: 34px;
+
+        flex: 1 1 auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .audio-shell .audio-controls .volume-slider {
+        position: static;
+
+        width: 100%;
+        height: 30px;
+
+        margin: 0;
+
+        transform: none;
+
+        background:
+            linear-gradient(
+                rgba(255,255,255,0.28),
+                rgba(255,255,255,0.28)
+            )
+            center / 100% 3px
+            no-repeat;
+    }
+
+    .audio-shell
+    .audio-controls
+    .volume-slider::-webkit-slider-thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    .audio-shell
+    .audio-controls
+    .volume-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    .audio-shell .audio-controls .volume-value {
+        min-width: 34px;
+
+        font-size: 9px;
+        letter-spacing: 0.04em;
+
+        text-align: right;
+
+        opacity: 0.78;
+    }
+
+    /* Variant buttons become compact icon + label cards. */
+    .scene-rail-item,
+    .scene-rail-item.active,
+    .scene-rail-item:hover {
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 3px;
+
+        padding:
+            4px 3px;
+
+        background:
+            rgba(5,5,5,0.43);
+
+        border-color:
+            rgba(255,255,255,0.18);
+    }
+
+    .scene-rail-item::before {
+        width: 14px;
+        height: 14px;
+
+        flex-basis: 14px;
+
+        margin: 0;
+
+        background:
+            rgba(255,255,255,0.82);
+    }
+
+    .scene-rail-item.active {
+        background:
+            rgba(255,255,255,0.14);
+
+        border-color:
+            rgba(255,255,255,0.52);
+    }
+
+    .scene-rail-item .scene-rail-text strong {
+        font-weight: 600;
+
+        color:
+            rgba(255,255,255,0.92);
+
+        text-shadow:
+            0 2px 8px rgba(0,0,0,0.92);
+    }
+
+}
+
+
+/* ---------- Short landscape: button near center, panel opens left ---------- */
+
+@media
+    (orientation: landscape)
+    and (max-height: 600px)
+    and (max-width: 1100px) {
+
+    .audio-shell {
+        position: fixed;
+
+        left:
+            calc(
+                50% + min(205px, 27vw)
+            );
+
+        right: auto;
+
+        top: 50%;
+
+        margin: 0;
+
+        transform:
+            translateY(10px);
+    }
+
+    .audio-shell .audio-controls {
+        left: auto;
+        right:
+            calc(100% + 9px);
+
+        top: 50%;
+
+        width:
+            min(226px, 38vw);
+
+        transform:
+            translateY(-50%)
+            translateX(6px)
+            scale(0.96);
+
+        transform-origin:
+            right center;
+    }
+
+    .audio-shell.is-open .audio-controls {
+        transform:
+            translateY(-50%)
+            translateX(0)
+            scale(1);
+    }
+
+}
+
+
+/* ---------- Very narrow phones ---------- */
+
+@media
+    (max-width: 390px)
+    and (orientation: portrait) {
+
+    .scene-rail-item::before {
+        width: 13px;
+        height: 13px;
+
+        flex-basis: 13px;
+    }
+
+    .scene-rail-item .scene-rail-text strong {
+        font-size: 6px;
+        letter-spacing: 0.055em;
+    }
+
+    .audio-shell .audio-controls {
+        width:
+            min(248px, 90vw);
+    }
+
+}
+
+
+/* ---------- Touch: no sticky hover visual movement ---------- */
+
+@media (hover: none) {
+
+    .scene-rail-item:hover::before {
+        transform: none;
+    }
+
+}
+
+.scene-rail-item[data-variant="heavy"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2014h11a4%204%200%200%200%20.5-7.97A5.5%205.5%200%200%200%207%207.5%203.5%203.5%200%200%200%206%2014Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m8%2017-1%202M12%2017l-1%202M16%2017l-1%202%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2014h11a4%204%200%200%200%20.5-7.97A5.5%205.5%200%200%200%207%207.5%203.5%203.5%200%200%200%206%2014Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m8%2017-1%202M12%2017l-1%202M16%2017l-1%202%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="thunder"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2013.5h11a4%204%200%200%200%20.5-7.97A5.5%205.5%200%200%200%207%207%203.5%203.5%200%200%200%206%2013.5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2014-3%205h3l-1%203%204-6h-3l1-2Z%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2013.5h11a4%204%200%200%200%20.5-7.97A5.5%205.5%200%200%200%207%207%203.5%203.5%200%200%200%206%2013.5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2014-3%205h3l-1%203%204-6h-3l1-2Z%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="sea"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%208c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2014c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%208c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2014c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="window"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%2214%22%20height%3D%2216%22%20rx%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M12%204v16M5%2012h14%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%2214%22%20height%3D%2216%22%20rx%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M12%204v16M5%2012h14%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="night"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%2015.5A7%207%200%200%201%208.5%206%207.3%207.3%200%201%200%2018%2015.5Z%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%2015.5A7%207%200%200%201%208.5%206%207.3%207.3%200%201%200%2018%2015.5Z%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="traffic"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m5%2015%201.5-5h11L19%2015%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2015h16v3H4z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%227%22%20cy%3D%2218%22%20r%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2217%22%20cy%3D%2218%22%20r%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%2010l1-2h6l1%202%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m5%2015%201.5-5h11L19%2015%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2015h16v3H4z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%227%22%20cy%3D%2218%22%20r%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2217%22%20cy%3D%2218%22%20r%3D%221%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%2010l1-2h6l1%202%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="rooftop"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019V9l4-3%204%203%204-5%204%204v11%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M2%2019h20M7%2012h2M15%2010h2M15%2014h2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019V9l4-3%204%203%204-5%204%204v11%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M2%2019h20M7%2012h2M15%2010h2M15%2014h2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="late"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M17%2015.5A6.5%206.5%200%200%201%208.5%207%206.8%206.8%200%201%200%2017%2015.5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%205v4M16%207h4%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M17%2015.5A6.5%206.5%200%200%201%208.5%207%206.8%206.8%200%201%200%2017%2015.5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%205v4M16%207h4%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="deep"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m8%204-4%207h3l-4%206h10l-4-6h3L8%204Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%2017v3%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m16%207-3%205h2l-3%205h8l-3-5h2l-3-5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M16%2017v3%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m8%204-4%207h3l-4%206h10l-4-6h3L8%204Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%2017v3%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m16%207-3%205h2l-3%205h8l-3-5h2l-3-5Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M16%2017v3%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="birds"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2012c2-3%204-3%206%200%202-3%204-3%206%200%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M12%208c1.5-2%203-2%204.5%200%201.5-2%203-2%204.5%200%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2012c2-3%204-3%206%200%202-3%204-3%206%200%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M12%208c1.5-2%203-2%204.5%200%201.5-2%203-2%204.5%200%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="wind"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%208h11c2%200%202-3%200-3-1%200-1.5.5-2%201%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2012h15c2%200%202%203%200%203-1%200-1.5-.5-2-1%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2016h8%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%208h11c2%200%202-3%200-3-1%200-1.5.5-2%201%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2012h15c2%200%202%203%200%203-1%200-1.5-.5-2-1%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2016h8%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="creek"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%203c5%204-3%207%202%2011s-2%205-1%207%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M14%203c-3%204%203%206%200%2010s2%205%201%208%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M8%203c5%204-3%207%202%2011s-2%205-1%207%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M14%203c-3%204%203%206%200%2010s2%205%201%208%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="waves"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%209c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2015c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%209c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2015c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="shore"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2217%22%20cy%3D%227%22%20r%3D%222.5%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2014c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2019h18%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2217%22%20cy%3D%227%22%20r%3D%222.5%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2014c2%200%202%202%204%202s2-2%204-2%202%202%204%202%202-2%204-2%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M3%2019h18%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}
+
+.scene-rail-item[data-variant="storm"]::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2012h11a4%204%200%200%200%20.5-7.8A5.5%205.5%200%200%200%207%205.7%203.5%203.5%200%200%200%206%2012Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2012-3%205h3l-1%204%204-7h-3l1-2Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019c2%200%202%201.5%204%201.5%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2012h11a4%204%200%200%200%20.5-7.8A5.5%205.5%200%200%200%207%205.7%203.5%203.5%200%200%200%206%2012Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22m13%2012-3%205h3l-1%204%204-7h-3l1-2Z%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M4%2019c2%200%202%201.5%204%201.5%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+}

@@ -45,7 +45,7 @@
 
     <link
     rel="stylesheet"
-    href="style.css?v=2"
+    href="style.css?v=3"
 >
 
 </head>
@@ -223,40 +223,68 @@
 
         <!-- AUDIO -->
 
-        <div class="audio-controls">
+        <div
+            class="audio-shell"
+            id="audioShell"
+        >
 
             <button
-                class="mute-button"
-                id="muteButton"
-                aria-label="Звук"
+                class="volume-toggle"
+                id="volumeToggle"
+                type="button"
+                aria-label="Открыть громкость"
+                aria-expanded="false"
+                aria-controls="audioPanel"
             >
-                <span class="volume-icon">
-                    ◖)))
+                <span
+                    class="volume-toggle-icon"
+                    id="volumeToggleIcon"
+                    aria-hidden="true"
+                >
+                    🔉
                 </span>
             </button>
 
 
-            <div class="volume-track">
+            <div
+                class="audio-controls"
+                id="audioPanel"
+            >
 
-                <input
-                    type="range"
-                    id="volumeSlider"
-                    class="volume-slider"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value="0.50"
+                <button
+                    class="mute-button"
+                    id="muteButton"
+                    type="button"
+                    aria-label="Включить или выключить звук"
                 >
+                    🔉
+                </button>
+
+
+                <div class="volume-track">
+
+                    <input
+                        type="range"
+                        id="volumeSlider"
+                        class="volume-slider"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.50"
+                        aria-label="Громкость"
+                    >
+
+                </div>
+
+
+                <span
+                    class="volume-value"
+                    id="volumeValue"
+                >
+                    50%
+                </span>
 
             </div>
-
-
-            <span
-                class="volume-value"
-                id="volumeValue"
-            >
-                50%
-            </span>
 
         </div>
 
@@ -410,7 +438,7 @@
 </main>
 
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 
 </body>
 
