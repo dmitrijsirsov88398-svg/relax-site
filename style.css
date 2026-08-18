@@ -3406,3 +3406,907 @@ body {
     }
 
 }
+/* =====================================================
+   RELAX — RESPONSIVE SYSTEM V2
+   Final overrides appended to the existing stylesheet.
+   ===================================================== */
+
+/* ---------- DYNAMIC VIEWPORT / MOBILE BROWSER FIX ---------- */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overscroll-behavior: none;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    min-height: 100svh;
+    min-height: 100dvh;
+}
+
+.content {
+    min-height: 100%;
+}
+
+button,
+.scene,
+.scene-rail-item,
+.mute-button,
+.play-button,
+.volume-slider {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/*
+ * Keep the central block in normal flex flow.
+ * Older rules use left/top/translate on .scene-info without a stable
+ * positioning context; resetting them here prevents device-dependent drift.
+ */
+.scene-info {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    max-width: 100%;
+}
+
+/* Secret control stays away from bottom navigation on every device. */
+.secret-eyes {
+    top: max(22px, env(safe-area-inset-top));
+    right: max(22px, env(safe-area-inset-right));
+    bottom: auto;
+    left: auto;
+}
+
+/* =====================================================
+   LARGE DESKTOP — 1201px+
+   ===================================================== */
+
+@media (min-width: 1201px) {
+
+    .content {
+        justify-content: center;
+        padding:
+            max(64px, env(safe-area-inset-top))
+            110px
+            128px
+            250px;
+    }
+
+    .scene-info {
+        width: min(980px, calc(100vw - 520px));
+        text-align: center;
+    }
+
+    .scene-info .scene-label {
+        margin: 0;
+        font-size: clamp(54px, 4.4vw, 82px);
+        letter-spacing: 0.14em;
+        line-height: 0.98;
+        white-space: normal;
+        text-wrap: balance;
+    }
+
+    .scene-info .scene-description {
+        margin-top: 16px;
+        max-width: min(760px, 60vw);
+    }
+
+    .play-button {
+        width: clamp(72px, 5vw, 86px);
+        height: clamp(72px, 5vw, 86px);
+        margin-top: 24px;
+        transform: none;
+    }
+
+    .scene-rail {
+        left: clamp(22px, 2vw, 36px);
+        top: 50%;
+        bottom: auto;
+
+        width: 220px;
+        height: min(320px, 52dvh);
+
+        transform: translateY(-50%);
+    }
+
+    .audio-controls {
+        position: fixed;
+
+        top: 50%;
+        right: clamp(22px, 2vw, 34px);
+        left: auto;
+        bottom: auto;
+
+        width: 58px;
+        height: min(220px, 42dvh);
+
+        margin: 0;
+        transform: translateY(-50%);
+    }
+
+    .scene-selector {
+        left: 50%;
+        right: auto;
+        bottom: max(46px, calc(env(safe-area-inset-bottom) + 34px));
+
+        width: min(620px, calc(100vw - 620px));
+
+        transform: translateX(-50%);
+        justify-content: center;
+    }
+
+    .scene-selector .scene {
+        flex: 1 1 0;
+        min-width: 112px;
+        max-width: 150px;
+    }
+
+    .experience-hint {
+        left: 50%;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+}
+
+/* =====================================================
+   TABLET / SMALL DESKTOP — 769px → 1200px
+   ===================================================== */
+
+@media (min-width: 769px) and (max-width: 1200px) {
+
+    .content {
+        justify-content: center;
+        padding:
+            max(58px, env(safe-area-inset-top))
+            96px
+            112px
+            188px;
+    }
+
+    .scene-info {
+        width: min(640px, calc(100vw - 360px));
+        max-width: calc(100vw - 360px);
+        text-align: center;
+    }
+
+    .scene-info .scene-label {
+        margin: 0;
+        font-size: clamp(38px, 5.2vw, 58px);
+        letter-spacing: 0.11em;
+        line-height: 1;
+        white-space: normal;
+        text-wrap: balance;
+    }
+
+    .scene-info .scene-description {
+        display: inline-block;
+        margin-top: 14px;
+        max-width: 100%;
+        padding: 6px 10px;
+
+        font-size: 9px;
+        letter-spacing: 0.17em;
+        line-height: 1.45;
+
+        white-space: normal;
+    }
+
+    .play-button {
+        width: 68px;
+        height: 68px;
+        margin-top: 22px;
+        transform: none;
+    }
+
+    .scene-rail {
+        left: 14px;
+        top: 50%;
+        bottom: auto;
+
+        width: 166px;
+        height: min(274px, 50dvh);
+
+        padding: 28px 11px 22px;
+
+        transform: translateY(-50%);
+    }
+
+    .scene-rail-item {
+        width: 142px;
+        padding-left: 27px;
+    }
+
+    .scene-rail-text strong {
+        font-size: 8px;
+    }
+
+    .scene-rail-text small {
+        font-size: 7px;
+    }
+
+    .audio-controls {
+        position: fixed;
+
+        top: 50%;
+        right: 12px;
+        left: auto;
+        bottom: auto;
+
+        width: 52px;
+        height: 198px;
+
+        margin: 0;
+
+        transform: translateY(-50%) scale(0.90);
+        transform-origin: center right;
+    }
+
+    .scene-selector {
+        left: 50%;
+        right: auto;
+        bottom: max(18px, calc(env(safe-area-inset-bottom) + 12px));
+
+        width: min(500px, calc(100vw - 390px));
+
+        gap: 7px;
+
+        transform: translateX(-50%);
+    }
+
+    .scene-selector .scene {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 9px 8px;
+    }
+
+    .experience-hint {
+        display: none;
+    }
+
+    .secret-eyes {
+        top: max(16px, env(safe-area-inset-top));
+        right: max(16px, env(safe-area-inset-right));
+        width: 50px;
+        height: 50px;
+    }
+
+}
+
+/* =====================================================
+   PHONE PORTRAIT / NARROW DEVICES — <= 768px
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .content {
+        justify-content: center;
+        padding:
+            max(72px, calc(env(safe-area-inset-top) + 54px))
+            12px
+            max(166px, calc(env(safe-area-inset-bottom) + 156px));
+    }
+
+    .brand {
+        top: max(24px, calc(env(safe-area-inset-top) + 14px));
+
+        max-width: 64vw;
+
+        font-size: 11px;
+        letter-spacing: 0.58em;
+        padding-left: 0.58em;
+
+        white-space: nowrap;
+    }
+
+    .scene-info {
+        width: min(94vw, 560px);
+        max-width: 94vw;
+        text-align: center;
+    }
+
+    .scene-info .scene-label {
+        margin: 0;
+
+        font-size: clamp(30px, 10vw, 44px);
+        letter-spacing: clamp(0.08em, 1.45vw, 0.13em);
+        line-height: 1.04;
+
+        white-space: normal;
+        overflow-wrap: normal;
+        text-wrap: balance;
+    }
+
+    .scene-info .scene-description {
+        display: block;
+
+        width: min(90vw, 520px);
+        max-width: 90vw;
+
+        margin: 14px auto 0;
+        padding: 0 4px;
+
+        font-size: clamp(8px, 2.2vw, 10px);
+        letter-spacing: 0.17em;
+        line-height: 1.5;
+
+        white-space: normal;
+        text-wrap: balance;
+    }
+
+    .play-button {
+        width: clamp(62px, 18vw, 72px);
+        height: clamp(62px, 18vw, 72px);
+
+        margin-top: 18px;
+
+        transform: none;
+    }
+
+    .audio-controls {
+        position: static;
+
+        width: fit-content;
+        max-width: 90vw;
+        height: auto;
+
+        margin: 18px auto 0;
+        padding: 7px 10px;
+
+        flex-direction: row;
+        gap: 9px;
+
+        transform: none;
+    }
+
+    .audio-controls .mute-button {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+    }
+
+    .audio-controls .volume-track {
+        position: relative;
+
+        width: clamp(105px, 31vw, 150px);
+        height: 30px;
+        flex: 0 0 auto;
+    }
+
+    .audio-controls .volume-slider {
+        position: static;
+
+        width: 100%;
+        height: 30px;
+
+        margin: 0;
+
+        transform: none;
+
+        background:
+            linear-gradient(
+                rgba(255,255,255,0.26),
+                rgba(255,255,255,0.26)
+            )
+            center / 100% 3px
+            no-repeat;
+    }
+
+    .audio-controls .volume-slider::-webkit-slider-thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    .audio-controls .volume-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    .audio-controls .volume-value {
+        min-width: 36px;
+
+        font-size: 10px;
+        text-align: right;
+    }
+
+    /* Variant row: HEAVY / THUNDER / SEA / WINDOW etc. */
+    .scene-rail {
+        position: fixed;
+
+        left: max(10px, env(safe-area-inset-left));
+        right: max(10px, env(safe-area-inset-right));
+        top: auto;
+        bottom: max(
+            82px,
+            calc(env(safe-area-inset-bottom) + 76px)
+        );
+
+        width: auto;
+        height: 44px;
+
+        padding: 0;
+
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: stretch;
+
+        gap: 6px;
+
+        overflow: visible;
+
+        transform: none;
+
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+
+        pointer-events: auto;
+    }
+
+    .scene-rail-title,
+    .scene-rail-line,
+    .scene-rail-dot {
+        display: none;
+    }
+
+    .scene-rail-item,
+    .scene-rail-item.active,
+    .scene-rail-item:hover {
+        flex: 1 1 0;
+
+        width: 0;
+        min-width: 0;
+        max-width: none;
+        height: 44px;
+
+        padding: 0 4px;
+
+        justify-content: center;
+
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+
+        background: rgba(7,7,7,0.26);
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        transform: none;
+    }
+
+    .scene-rail-item.active {
+        border-color: rgba(255,255,255,0.48);
+        background: rgba(255,255,255,0.12);
+    }
+
+    .scene-rail-text {
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+
+        gap: 0;
+
+        text-align: center;
+    }
+
+    .scene-rail-text strong {
+        max-width: 100%;
+
+        font-size: clamp(6px, 1.85vw, 8px);
+        letter-spacing: 0.08em;
+        line-height: 1.1;
+
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .scene-rail-text small {
+        display: none;
+    }
+
+    /* Main row: RAIN / CITY / FOREST / OCEAN. */
+    .scene-selector {
+        position: absolute;
+
+        left: max(10px, env(safe-area-inset-left));
+        right: max(10px, env(safe-area-inset-right));
+        bottom: max(
+            12px,
+            calc(env(safe-area-inset-bottom) + 8px)
+        );
+
+        width: auto;
+
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        gap: 6px;
+
+        transform: none;
+    }
+
+    .scene-selector .scene {
+        width: 100%;
+        min-width: 0;
+        height: 58px;
+
+        padding: 7px 3px;
+
+        border-radius: 18px;
+    }
+
+    .scene-selector .scene-icon {
+        font-size: 15px;
+    }
+
+    .scene-selector .scene span:last-child {
+        margin-top: 4px;
+
+        font-size: clamp(6px, 1.7vw, 8px);
+        letter-spacing: 0.08em;
+
+        white-space: nowrap;
+    }
+
+    .experience-hint {
+        display: none !important;
+    }
+
+    .secret-eyes {
+        top: max(14px, calc(env(safe-area-inset-top) + 8px));
+        right: max(14px, calc(env(safe-area-inset-right) + 8px));
+
+        width: 42px;
+        height: 42px;
+    }
+
+}
+
+/* =====================================================
+   VERY SMALL / SHORT PHONE PORTRAIT
+   ===================================================== */
+
+@media (max-width: 768px) and (max-height: 700px) and (orientation: portrait) {
+
+    .content {
+        padding-top:
+            max(60px, calc(env(safe-area-inset-top) + 44px));
+
+        padding-bottom:
+            max(150px, calc(env(safe-area-inset-bottom) + 142px));
+    }
+
+    .brand {
+        top: max(16px, calc(env(safe-area-inset-top) + 8px));
+        font-size: 9px;
+    }
+
+    .scene-info .scene-label {
+        font-size: clamp(27px, 8.5vw, 36px);
+    }
+
+    .scene-info .scene-description {
+        margin-top: 9px;
+        font-size: 7.5px;
+        line-height: 1.35;
+    }
+
+    .play-button {
+        width: 56px;
+        height: 56px;
+        margin-top: 12px;
+    }
+
+    .audio-controls {
+        margin-top: 12px;
+        transform: scale(0.90);
+    }
+
+    .scene-rail {
+        height: 38px;
+        bottom: max(
+            72px,
+            calc(env(safe-area-inset-bottom) + 68px)
+        );
+    }
+
+    .scene-rail-item,
+    .scene-rail-item.active,
+    .scene-rail-item:hover {
+        height: 38px;
+    }
+
+    .scene-selector .scene {
+        height: 50px;
+    }
+
+}
+
+/* =====================================================
+   MOBILE / TABLET LANDSCAPE WITH SHORT VIEWPORT
+   ===================================================== */
+
+@media
+    (orientation: landscape)
+    and (max-height: 600px)
+    and (max-width: 1100px) {
+
+    .content {
+        justify-content: center;
+
+        padding:
+            max(42px, calc(env(safe-area-inset-top) + 26px))
+            20px
+            max(104px, calc(env(safe-area-inset-bottom) + 96px));
+    }
+
+    .brand {
+        top: max(10px, calc(env(safe-area-inset-top) + 6px));
+        font-size: 9px;
+        letter-spacing: 0.48em;
+    }
+
+    .scene-info {
+        width: min(58vw, 560px);
+        max-width: 58vw;
+
+        transform: none;
+
+        text-align: center;
+    }
+
+    .scene-info .scene-label {
+        font-size: clamp(26px, 5vw, 40px);
+        letter-spacing: 0.10em;
+        line-height: 1;
+
+        white-space: normal;
+    }
+
+    .scene-info .scene-description {
+        margin-top: 8px;
+        padding: 0;
+
+        max-width: 58vw;
+
+        font-size: 7px;
+        letter-spacing: 0.14em;
+        line-height: 1.3;
+
+        white-space: normal;
+    }
+
+    .play-button {
+        width: 52px;
+        height: 52px;
+
+        margin-top: 10px;
+
+        transform: none;
+    }
+
+    .audio-controls {
+        position: fixed;
+
+        left: calc(50% + min(220px, 27vw));
+        right: auto;
+        top: 50%;
+        bottom: auto;
+
+        width: fit-content;
+        height: auto;
+
+        margin: 0;
+        padding: 6px 9px;
+
+        flex-direction: row;
+
+        transform: translateY(8px) scale(0.80);
+        transform-origin: center;
+    }
+
+    .audio-controls .volume-track {
+        position: relative;
+
+        width: clamp(92px, 14vw, 125px);
+        height: 28px;
+        flex: 0 0 auto;
+    }
+
+    .audio-controls .volume-slider {
+        position: static;
+
+        width: 100%;
+        height: 28px;
+
+        transform: none;
+
+        background:
+            linear-gradient(
+                rgba(255,255,255,0.26),
+                rgba(255,255,255,0.26)
+            )
+            center / 100% 3px
+            no-repeat;
+    }
+
+    .scene-rail {
+        position: fixed;
+
+        left: max(12px, env(safe-area-inset-left));
+        right: max(12px, env(safe-area-inset-right));
+        top: auto;
+        bottom: max(
+            58px,
+            calc(env(safe-area-inset-bottom) + 54px)
+        );
+
+        width: auto;
+        height: 34px;
+
+        padding: 0;
+
+        display: flex;
+        flex-direction: row;
+
+        gap: 6px;
+
+        transform: none;
+
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .scene-rail-title,
+    .scene-rail-line,
+    .scene-rail-dot {
+        display: none;
+    }
+
+    .scene-rail-item,
+    .scene-rail-item.active,
+    .scene-rail-item:hover {
+        flex: 1 1 0;
+
+        width: 0;
+        min-width: 0;
+        max-width: none;
+        height: 34px;
+
+        padding: 0 5px;
+
+        justify-content: center;
+
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+
+        background: rgba(7,7,7,0.26);
+
+        transform: none;
+    }
+
+    .scene-rail-text {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .scene-rail-text strong {
+        font-size: clamp(6px, 1vw, 8px);
+        letter-spacing: 0.07em;
+        white-space: nowrap;
+    }
+
+    .scene-rail-text small {
+        display: none;
+    }
+
+    .scene-selector {
+        position: absolute;
+
+        left: max(12px, env(safe-area-inset-left));
+        right: max(12px, env(safe-area-inset-right));
+        bottom: max(
+            8px,
+            calc(env(safe-area-inset-bottom) + 5px)
+        );
+
+        width: auto;
+
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        gap: 6px;
+
+        transform: none;
+    }
+
+    .scene-selector .scene {
+        width: 100%;
+        min-width: 0;
+        height: 42px;
+
+        padding: 4px 4px;
+        border-radius: 15px;
+    }
+
+    .scene-selector .scene-icon {
+        font-size: 13px;
+    }
+
+    .scene-selector .scene span:last-child {
+        margin-top: 2px;
+        font-size: 6px;
+        letter-spacing: 0.07em;
+    }
+
+    .experience-hint {
+        display: none !important;
+    }
+
+    .secret-eyes {
+        top: max(9px, calc(env(safe-area-inset-top) + 5px));
+        right: max(10px, calc(env(safe-area-inset-right) + 6px));
+
+        width: 36px;
+        height: 36px;
+    }
+
+}
+
+/* =====================================================
+   TOUCH DEVICES — avoid sticky hover transforms
+   ===================================================== */
+
+@media (hover: none) {
+
+    .scene:hover,
+    .scene.active:hover,
+    .scene-rail-item:hover,
+    .scene-rail-item.active:hover,
+    .play-button:hover,
+    .mute-button:hover {
+        transform: none;
+    }
+
+}
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .background-video,
+    .scene,
+    .scene-rail-item,
+    .play-button,
+    .audio-controls {
+        transition-duration: 0.01ms !important;
+    }
+
+}
+
