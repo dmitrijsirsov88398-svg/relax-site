@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RELAX</title>
+
+    <link
+    rel="icon"
+    type="image/svg+xml"
+    href="favicon.svg"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body class="is-loading">
+
+<!-- ================= LOADING SCREEN ================= -->
+
+<div class="loading-screen" id="loadingScreen">
+
+    <div class="loading-content">
+
+        <div class="loading-brand">
+            RELAX
+        </div>
+
+        <div class="loading-line">
+            <div
+                class="loading-progress"
+                id="loadingProgress"
+            ></div>
+        </div>
+
+        <div class="loading-text">
+            LOADING
+        </div>
+
+    </div>
+
+</div>
+
+<main class="app">
+
+<!-- ================= SECRET EYES ================= -->
+
+<button
+    class="secret-eyes"
+    id="secretEyes"
+    aria-label="Секретный режим"
+></button>
+
+<!-- =====================================================
+     LEFT SCENE NAVIGATION
+     ===================================================== -->
+
+<!-- =====================================================
+     RAIN VARIANTS
+     ===================================================== -->
+
+<div class="scene-rail" id="sceneRail">
+
+    <div class="scene-rail-title">
+        RAIN
+    </div>
+
+    <div class="scene-rail-line"></div>
+
+    <div class="scene-rail-thumb" id="sceneRailThumb"></div>
+
+    <button
+        class="scene-rail-item active"
+        data-variant="heavy"
+    >
+        <span class="scene-rail-dot"></span>
+        <span class="scene-rail-text">
+            <strong>HEAVY</strong>
+            <small>сильный дождь</small>
+        </span>
+    </button>
+
+    <button
+        class="scene-rail-item"
+        data-variant="thunder"
+    >
+        <span class="scene-rail-dot"></span>
+        <span class="scene-rail-text">
+            <strong>THUNDER</strong>
+            <small>дождь · гром</small>
+        </span>
+    </button>
+
+    <button
+        class="scene-rail-item"
+        data-variant="sea"
+    >
+        <span class="scene-rail-dot"></span>
+        <span class="scene-rail-text">
+            <strong>SEA</strong>
+            <small>дождь · море</small>
+        </span>
+    </button>
+
+    <button
+        class="scene-rail-item"
+        data-variant="window"
+    >
+        <span class="scene-rail-dot"></span>
+        <span class="scene-rail-text">
+            <strong>WINDOW</strong>
+            <small>дождь за окном</small>
+        </span>
+    </button>
+
+</div>
+
+    <!-- VIDEO -->
+
+    <div class="video-layer">
+
+        <video
+            id="videoA"
+            class="background-video active"
+            muted
+            loop
+            playsinline
+        ></video>
+
+        <video
+            id="videoB"
+            class="background-video"
+            muted
+            loop
+            playsinline
+        ></video>
+
+    </div>
+
+
+    <div class="overlay"></div>
+    <div class="mouse-glow"></div>
+
+
+    <!-- CONTENT -->
+
+    <section class="content">
+
+
+        <div class="brand">
+            RELAX
+        </div>
+
+
+        <!-- SCENE INFO -->
+
+        <div class="scene-info">
+
+            <div
+                class="scene-label"
+                id="sceneTitle"
+            >
+                RAIN
+            </div>
+
+            <div
+                class="scene-description"
+                id="sceneDescription"
+            >
+                дождь · вода · спокойствие
+            </div>
+
+        </div>
+
+
+        <!-- PLAY -->
+
+        <button
+            class="play-button"
+            id="playButton"
+            aria-label="Воспроизвести"
+        >
+            ▶
+        </button>
+
+
+        <!-- AUDIO -->
+
+        <div class="audio-controls">
+
+            <button
+                class="mute-button"
+                id="muteButton"
+                aria-label="Звук"
+            >
+                <span class="volume-icon">
+                    ◖)))
+                </span>
+            </button>
+
+
+            <div class="volume-track">
+
+                <input
+                    type="range"
+                    id="volumeSlider"
+                    class="volume-slider"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.50"
+                >
+
+            </div>
+
+
+            <span
+                class="volume-value"
+                id="volumeValue"
+            >
+                50%
+            </span>
+
+        </div>
+
+
+        <!-- EXPERIENCE HINT -->
+
+        <div class="experience-hint">
+
+            <span class="hint-item">
+
+                <span class="hint-icon">
+                    ⛶
+                </span>
+
+                F11 для полного экрана
+
+            </span>
+
+
+            <span class="hint-divider">
+                ·
+            </span>
+
+
+            <span class="hint-item">
+
+                <span class="hint-icon">
+                    🎧
+                </span>
+
+                Для лучшего звучания используйте наушники
+
+            </span>
+
+        </div>
+
+
+        <!-- SCENES -->
+
+        <div class="scene-selector">
+
+
+            <button
+                class="scene active"
+                data-scene="rain"
+            >
+
+                <span class="scene-icon">
+                    ☔
+                </span>
+
+                <span>
+                    RAIN
+                </span>
+
+            </button>
+
+
+            <button
+                class="scene"
+                data-scene="city"
+            >
+
+                <span class="scene-icon">
+                    🌆
+                </span>
+
+                <span>
+                    CITY
+                </span>
+
+            </button>
+
+
+            <button
+                class="scene"
+                data-scene="forest"
+            >
+
+                <span class="scene-icon">
+                    🌲
+                </span>
+
+                <span>
+                    FOREST
+                </span>
+
+            </button>
+
+
+            <button
+                class="scene"
+                data-scene="ocean"
+            >
+
+                <span class="scene-icon">
+                    🌊
+                </span>
+
+                <span>
+                    OCEAN
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+    </section>
+<!-- ================= SECRET MODE ================= -->
+
+<section
+    class="secret-mode"
+    id="secretMode"
+    aria-hidden="true"
+>
+
+    <video
+        id="secretVideo"
+        class="secret-video"
+        muted
+        loop
+        playsinline
+    ></video>
+
+    <div class="secret-overlay"></div>
+
+    <div class="secret-content">
+
+        <div class="secret-title">
+            AFTER DARK
+        </div>
+
+        <div class="secret-subtitle">
+            hidden collection
+        </div>
+
+        <button
+            class="secret-close"
+            id="secretClose"
+            aria-label="Вернуться"
+        >
+            ×
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<script src="app.js?v=3"></script>
+
+</body>
+
+</html>

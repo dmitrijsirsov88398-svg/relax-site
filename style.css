@@ -1,0 +1,3408 @@
+﻿* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #090909;
+
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.app {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+.video-layer {
+    position: absolute;
+    inset: 0;
+
+    background: #090909;
+}
+
+.background-video {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    opacity: 0;
+
+    transition:
+        opacity 1.8s ease-in-out,
+        transform 2.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    transform: scale(1.03);
+
+    filter: brightness(0.72);
+}
+
+.background-video.active {
+    opacity: 1;
+}
+
+/* =====================================================
+   CINEMATIC CROSSFADE
+   ===================================================== */
+
+.background-video.cinematic-in {
+    opacity: 0;
+    transform: scale(1.055);
+}
+
+.background-video.cinematic-in.active {
+    opacity: 1;
+    transform: scale(1.03);
+}
+
+.background-video.cinematic-out {
+    opacity: 0;
+    transform: scale(1.055);
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 15%,
+            rgba(0, 0, 0, 0.58) 100%
+        );
+
+    box-shadow:
+        inset 0 0 180px rgba(0, 0, 0, 0.55);
+}
+
+.content {
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.brand {
+    position: absolute;
+
+    top: 38px;
+
+    font-size: 13px;
+
+    letter-spacing: 9px;
+
+    opacity: 0.72;
+}
+.scene {
+    min-width: 118px;
+
+    padding: 13px 20px;
+
+    border-radius: 30px;
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    background:
+        rgba(5,5,5,0.22);
+
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.15);
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.scene-info .scene-label {
+    will-change: opacity, filter;
+}
+
+.scene-info .scene-description {
+    will-change: opacity, filter;
+}
+
+.play-button {
+    border-radius: 50%;
+
+    color: white;
+
+    font-size: 21px;
+
+    cursor: pointer;
+}
+
+.play-button:hover {
+    transform: scale(1.08);
+
+    background: rgba(255,255,255,0.17);
+
+    border-color: rgba(255,255,255,0.7);
+}
+
+.scene-selector {
+    position: absolute;
+
+    bottom: 42px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.scene {
+    min-width: 108px;
+
+    padding: 12px 18px;
+
+    border-radius: 30px;
+
+    border: 1px solid rgba(255,255,255,0.14);
+
+    background: rgba(0,0,0,0.20);
+
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+
+    transition:
+        background 0.4s ease,
+        border-color 0.4s ease,
+        transform 0.3s ease;
+}
+
+.scene span {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+@media (max-width: 600px) {
+
+    .secret-eyes {
+        right: 12px;
+        bottom: 12px;
+
+        left: auto;
+        top: auto;
+
+        width: 48px;
+        height: 48px;
+    }
+
+}
+
+/* SOUND BUTTON */
+
+.mute-button {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.mute-button:hover {
+    background:
+        rgba(255, 255, 255, 0.16);
+
+    border-color:
+        rgba(255, 255, 255, 0.35);
+
+    transform:
+        scale(1.08);
+}
+
+
+.mute-button:active {
+    transform:
+        scale(0.94);
+}
+
+
+.volume-icon {
+    font-size: 16px;
+    line-height: 1;
+
+    opacity: 0.9;
+}
+
+
+/* SLIDER */
+
+.volume-track {
+    width: 120px;
+}
+
+
+.volume-slider {
+    width: 100%;
+
+    height: 3px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background:
+        rgba(255, 255, 255, 0.25);
+
+    border-radius: 999px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.35);
+
+    cursor: pointer;
+}
+
+
+.volume-slider::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.35);
+
+    cursor: pointer;
+}
+
+
+.volume-value {
+    min-width: 34px;
+
+    font-size: 11px;
+
+    letter-spacing: 0.08em;
+
+    opacity: 0.65;
+}
+
+
+/* =====================================================
+   F11 + HEADPHONES HINT
+   ===================================================== */
+
+.experience-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+    font-size: 11px;
+
+    letter-spacing: 0.08em;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    text-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.45);
+
+    transition:
+        opacity 0.4s ease;
+}
+
+
+.hint-item {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.hint-icon {
+    font-size: 14px;
+
+    opacity: 0.9;
+}
+
+
+.hint-divider {
+    opacity: 0.3;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .experience-hint {
+        flex-direction: column;
+
+        gap: 7px;
+
+        font-size: 9px;
+
+        margin-top: 16px;
+    }
+
+
+    .hint-divider {
+        display: none;
+    }
+
+
+    .volume-track {
+        width: 90px;
+    }
+
+}
+
+/* =====================================================
+   EXPERIENCE HINT
+   ===================================================== */
+
+.experience-hint {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+    font-size: 11px;
+
+    letter-spacing: 0.08em;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    text-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+
+.hint-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.hint-icon {
+    font-size: 14px;
+
+    opacity: 0.9;
+}
+
+
+.hint-divider {
+    opacity: 0.3;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .experience-hint {
+
+        flex-direction: column;
+
+        gap: 7px;
+
+        font-size: 9px;
+
+        margin-top: 16px;
+    }
+
+
+    .hint-divider {
+        display: none;
+    }
+
+}
+
+/* КНОПКА ЗВУКА */
+
+.mute-button {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.mute-button:hover {
+    transform: scale(1.08);
+
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    border-color:
+        rgba(255, 255, 255, 0.32);
+}
+
+
+.mute-button:active {
+    transform: scale(0.94);
+}
+
+
+.volume-icon {
+    font-size: 14px;
+
+    letter-spacing: -2px;
+
+    opacity: 0.9;
+}
+
+
+/* ПОЛЗУНОК */
+
+.volume-track {
+    width: 110px;
+}
+
+
+.volume-slider {
+    width: 100%;
+
+    height: 3px;
+
+    margin: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.24);
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+/* Chrome / Edge */
+
+.volume-slider::-webkit-slider-thumb {
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 12px;
+    height: 12px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.35);
+
+    cursor: pointer;
+}
+
+
+/* Firefox */
+
+.volume-slider::-moz-range-thumb {
+
+    width: 12px;
+    height: 12px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.35);
+
+    cursor: pointer;
+}
+
+
+/* ПРОЦЕНТ */
+
+.volume-value {
+
+    min-width: 32px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.08em;
+
+    text-align: right;
+
+    opacity: 0.6;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .volume-track {
+        width: 85px;
+    }
+
+    .volume-value {
+        font-size: 9px;
+    }
+
+}
+/* =====================================================
+   RELAX — FINAL VISUAL POLISH
+   ===================================================== */
+
+/* ---------- SCENE TITLE ---------- */
+
+.scene-label {
+    font-size: clamp(48px, 7vw, 86px);
+    font-weight: 300;
+    letter-spacing: 0.28em;
+    line-height: 1;
+    text-transform: uppercase;
+
+    text-shadow:
+        0 3px 35px rgba(0, 0, 0, 0.55),
+        0 0 50px rgba(255, 255, 255, 0.08);
+}
+
+
+/* ---------- DESCRIPTION ---------- */
+
+.scene-description {
+    margin-top: 20px;
+
+    font-size: 13px;
+    font-weight: 400;
+
+    letter-spacing: 0.24em;
+    text-transform: lowercase;
+
+    opacity: 0.72;
+
+    text-shadow:
+        0 2px 18px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ---------- PLAY BUTTON ---------- */
+
+.play-button {
+    width: 88px;
+    height: 88px;
+
+    border:
+        1px solid rgba(255,255,255,0.28);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.25),
+        inset 0 0 25px rgba(255,255,255,0.03);
+}
+
+.play-button:hover {
+    transform:
+        scale(1.08);
+
+    box-shadow:
+        0 18px 60px rgba(0,0,0,0.35),
+        0 0 35px rgba(255,255,255,0.08);
+}
+
+
+/* ---------- AUDIO ---------- */
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 28px;
+
+    padding: 8px 12px;
+
+    width: fit-content;
+
+    border:
+        1px solid rgba(255,255,255,0.18);
+
+    border-radius: 999px;
+
+    background:
+        rgba(10,10,10,0.24);
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,0.25);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+/* SOUND BUTTON */
+
+.mute-button {
+    width: 40px;
+    height: 40px;
+
+    border:
+        1px solid rgba(255,255,255,0.22);
+
+    background:
+        rgba(255,255,255,0.07);
+
+    box-shadow:
+        inset 0 0 15px rgba(255,255,255,0.03);
+}
+
+.mute-button:hover {
+    background:
+        rgba(255,255,255,0.15);
+
+    border-color:
+        rgba(255,255,255,0.45);
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,0.08);
+}
+
+.volume-icon {
+    font-size: 15px;
+    letter-spacing: -1px;
+}
+
+
+/* ---------- SCENE BUTTONS ---------- */
+
+.scene {
+    min-width: 118px;
+
+    padding: 13px 20px;
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    background:
+        rgba(5,5,5,0.22);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.15);
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.scene-icon {
+    font-size: 19px;
+
+    filter:
+        drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+
+.scene span:last-child {
+    margin-top: 6px;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.22em;
+}
+
+.scene:hover {
+    transform: translateY(-4px);
+
+    background:
+        rgba(255,255,255,0.10);
+
+    border-color:
+        rgba(255,255,255,0.28);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.25);
+}
+
+.scene.active {
+    background:
+        rgba(255,255,255,0.16);
+
+    border-color:
+        rgba(255,255,255,0.42);
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,0.25),
+        inset 0 0 20px rgba(255,255,255,0.03);
+}
+
+
+/* ---------- EXPERIENCE HINT ---------- */
+
+.experience-hint {
+    margin-top: 22px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.12em;
+
+    color:
+        rgba(255,255,255,0.58);
+
+    opacity: 0.9;
+}
+
+.hint-icon {
+    font-size: 14px;
+
+    opacity: 0.85;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+    .scene-selector {
+        gap: 6px;
+    }
+
+    .scene {
+        min-width: 78px;
+        padding: 10px 7px;
+    }
+
+    .scene-icon {
+        font-size: 16px;
+    }
+
+    .scene span:last-child {
+        font-size: 8px;
+        letter-spacing: 0.14em;
+    }
+
+    .play-button {
+        width: 72px;
+        height: 72px;
+    }
+
+    .experience-hint {
+        font-size: 8px;
+        letter-spacing: 0.08em;
+    }
+
+}
+/* =====================================================
+   RELAX — ACTIVE SCENE GLOW
+   ===================================================== */
+
+.scene {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Мягкое внутреннее свечение */
+.scene.active::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: inherit;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,0.12),
+            transparent 70%
+        );
+
+    opacity: 0.45;
+
+    pointer-events: none;
+
+    animation:
+        sceneGlow 4s ease-in-out infinite;
+}
+
+
+/* Светлая линия сверху */
+.scene.active::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 18%;
+    right: 18%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.5),
+            transparent
+        );
+
+    opacity: 0.65;
+
+    pointer-events: none;
+}
+
+
+/* Иконка активной сцены */
+.scene.active .scene-icon {
+    transform: scale(1.08);
+
+    filter:
+        drop-shadow(
+            0 0 8px rgba(255,255,255,0.28)
+        );
+
+    transition:
+        transform 0.5s ease,
+        filter 0.5s ease;
+}
+
+
+/* Текст активной сцены */
+.scene.active span:last-child {
+    text-shadow:
+        0 0 14px rgba(255,255,255,0.18);
+}
+
+
+/* Плавное дыхание */
+@keyframes sceneGlow {
+
+    0% {
+        opacity: 0.30;
+    }
+
+    50% {
+        opacity: 0.60;
+    }
+
+    100% {
+        opacity: 0.30;
+    }
+
+}
+
+
+/* Hover поверх активной */
+.scene.active:hover::before {
+    opacity: 0.8;
+}
+
+
+/* Не показываем анимацию,
+   если пользователь отключил motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .scene.active::before {
+        animation: none;
+    }
+
+}
+/* =====================================================
+   RELAX — SOFT MOUSE GLOW
+   ===================================================== */
+
+.mouse-glow {
+    position: fixed;
+
+    width: 260px;
+    height: 260px;
+
+    left: 0;
+    top: 0;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 2;
+
+   background:
+    radial-gradient(
+        circle,
+        rgba(255,255,255,0.12) 0%,
+        rgba(255,255,255,0.055) 25%,
+        rgba(255,255,255,0.018) 50%,
+        transparent 74%
+    );
+
+    filter: blur(8px);
+
+    transform:
+        translate(-50%, -50%);
+
+    opacity: 0;
+
+    transition:
+        opacity 0.8s ease;
+
+    will-change:
+        transform;
+}
+
+
+/* На мобильных мыши нет — эффект отключаем */
+
+@media (hover: none) {
+
+    .mouse-glow {
+        display: none;
+    }
+
+}
+/* =====================================================
+   RELAX — LOADING SCREEN
+   ===================================================== */
+
+.loading-screen {
+    position: fixed;
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #090909;
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 1.2s ease,
+        visibility 1.2s ease;
+}
+
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
+
+.loading-content {
+    width: min(280px, 70vw);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.loading-brand {
+    margin-bottom: 30px;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    letter-spacing: 0.65em;
+
+    padding-left: 0.65em;
+
+    color:
+        rgba(255,255,255,0.88);
+
+    text-shadow:
+        0 0 30px rgba(255,255,255,0.12);
+}
+
+
+.loading-line {
+    width: 100%;
+    height: 1px;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border-radius: 999px;
+}
+
+
+.loading-progress {
+    width: 0%;
+    height: 100%;
+
+    background:
+        rgba(255,255,255,0.75);
+
+    box-shadow:
+        0 0 12px rgba(255,255,255,0.25);
+
+    transition:
+        width 0.4s ease;
+}
+
+
+.loading-text {
+    margin-top: 14px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.35em;
+
+    padding-left: 0.35em;
+
+    color:
+        rgba(255,255,255,0.38);
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+    .loading-content {
+        width: 65vw;
+    }
+
+    .loading-brand {
+        font-size: 12px;
+    }
+
+}
+/* =====================================================
+   RELAX — UI ENTRANCE
+   ===================================================== */
+
+.content {
+    opacity: 0;
+    transform: translateY(10px);
+
+    transition:
+        opacity 1.4s ease,
+        transform 1.4s ease;
+}
+
+
+/* После загрузки */
+
+.loading-screen.hidden ~ .app .content {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* RELAX */
+
+.loading-screen.hidden ~ .app .brand {
+    animation:
+        relaxFadeIn 1.2s ease 0.15s both;
+}
+
+
+/* Название сцены */
+
+.loading-screen.hidden ~ .app .scene-info {
+    animation:
+        relaxFadeInUp 1.1s ease 0.3s both;
+}
+
+
+/* Play */
+
+.loading-screen.hidden ~ .app .play-button {
+    animation:
+        relaxFadeInUp 1s ease 0.45s both;
+}
+
+
+/* Звук */
+
+.loading-screen.hidden ~ .app .audio-controls {
+    animation:
+        relaxFadeInUp 1s ease 0.6s both;
+}
+
+
+/* Подсказка */
+
+.loading-screen.hidden ~ .app .experience-hint {
+    animation:
+        relaxFadeInUp 1s ease 0.72s both;
+}
+
+
+/* Сцены */
+
+.loading-screen.hidden ~ .app .scene-selector {
+    animation:
+        relaxFadeInUp 1s ease 0.85s both;
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes relaxFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0.72;
+    }
+
+}
+
+
+@keyframes relaxFadeInUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .content {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .loading-screen.hidden ~ .app * {
+        animation: none !important;
+    }
+
+}
+
+/* =====================================================
+   RAIN VARIANTS
+   ===================================================== */
+
+.scene-rail {
+    position: fixed;
+
+    left: 28px;
+    top: 50%;
+
+    width: 190px;
+    height: 300px;
+
+    transform: translateY(-50%);
+
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 28px 0;
+
+    pointer-events: none;
+}
+
+
+/* TITLE */
+
+.scene-rail-title {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    font-size: 9px;
+
+    letter-spacing: 0.35em;
+
+    color: rgba(255,255,255,0.35);
+}
+
+
+/* VERTICAL LINE */
+
+.scene-rail-line {
+    position: absolute;
+
+    left: 5px;
+    top: 48px;
+    bottom: 28px;
+
+    width: 1px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.08),
+            rgba(255,255,255,0.28),
+            rgba(255,255,255,0.08)
+        );
+}
+
+
+/* MOVING INDICATOR */
+
+/* ITEM */
+
+.scene-rail-item {
+    position: relative;
+
+    width: 190px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 0 0 24px;
+
+    border: 0;
+    transition:
+        color 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+    background: transparent;
+
+    color: rgba(255,255,255,0.35);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    transition:
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* DOT */
+
+.scene-rail-dot {
+    position: absolute;
+
+    left: 2px;
+    top: 50%;
+
+    width: 7px;
+    height: 7px;
+
+    margin-top: -3.5px;
+
+    border-radius: 50%;
+
+        background: rgba(255,255,255,0.22);
+
+    transition:
+        background 0.5s ease,
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.5s ease;
+}
+/* TEXT */
+
+.scene-rail-text {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.scene-rail-text strong {
+    font-size: 9px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.24em;
+
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene-rail-text small {
+    font-size: 8px;
+
+    letter-spacing: 0.04em;
+
+    color: rgba(255,255,255,0.28);
+
+    transition:
+        color 0.5s ease,
+        opacity 0.5s ease;
+}
+
+
+/* HOVER */
+.scene-rail-item.active:hover .scene-rail-dot {
+    background: rgba(255,255,255,1);
+    transform: scale(1.2);
+}
+.scene-rail-item:hover {
+    color: rgba(255,255,255,0.85);
+
+    transform: translateX(4px);
+}
+
+.scene-rail-item:hover .scene-rail-dot {
+    background: rgba(255,255,255,0.75);
+    transform: scale(1.15);
+}
+
+
+/* ACTIVE */
+
+.scene-rail-item.active {
+    color: white;
+}
+
+.scene-rail-item.active .scene-rail-dot {
+    background: rgba(255,255,255,0.98);
+
+    transform: scale(1.2);
+
+    animation: railGlow 3s ease-in-out infinite;
+}
+
+@keyframes railGlow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 6px rgba(255,255,255,0.40),
+            0 0 16px rgba(255,255,255,0.20);
+    }
+
+    50% {
+        box-shadow:
+            0 0 9px rgba(255,255,255,0.55),
+            0 0 22px rgba(255,255,255,0.30);
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .scene-rail {
+        left: 10px;
+
+        width: 150px;
+        height: 250px;
+    }
+
+    .scene-rail-item {
+        width: 150px;
+    }
+
+}
+
+/* =====================================================
+   SECRET BUTTON — BOTTOM RIGHT
+   ===================================================== */
+
+.secret-eyes {
+    position: fixed;
+
+    right: 28px;
+    bottom: 28px;
+
+    left: auto;
+    top: auto;
+
+    width: 72px;
+    height: 72px;
+
+    padding: 0;
+    margin: 0;
+
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 50%;
+
+    background: rgba(0,0,0,0.25);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    cursor: pointer;
+
+    z-index: 1000;
+
+    transition:
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.15s ease;
+}
+
+.secret-eyes:hover {
+    background: rgba(0,0,0,0.35);
+
+    box-shadow:
+        0 0 30px rgba(255,255,255,0.08);
+}
+
+.secret-eyes:active {
+    transform: scale(0.94);
+}
+
+
+@media (max-width: 600px) {
+
+    .secret-eyes {
+        right: 12px;
+        bottom: 12px;
+
+        width: 48px;
+        height: 48px;
+    }
+
+}
+/* =====================================================
+   INITIAL LOAD
+   ===================================================== */
+
+body.is-loading {
+    opacity: 0;
+}
+
+body {
+    opacity: 1;
+
+    transition:
+        opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   FINAL MOBILE LAYOUT
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .scene-rail {
+        left: 12px;
+        top: auto;
+        bottom: 118px;
+
+        width: calc(100vw - 24px);
+        height: auto;
+
+        transform: none;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        gap: 6px;
+
+        padding: 0;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scrollbar-width: none;
+
+        pointer-events: auto;
+    }
+
+    .scene-rail::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scene-rail-title,
+    .scene-rail-line {
+        display: none;
+    }
+
+    .scene-rail-item {
+        flex: 0 0 auto;
+
+        width: auto;
+        min-width: 92px;
+        height: 42px;
+
+        padding: 0 14px;
+
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 999px;
+
+        background: rgba(0,0,0,0.20);
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        transform: none;
+    }
+
+    .scene-rail-item:hover {
+        transform: none;
+    }
+
+    .scene-rail-dot {
+        display: none;
+    }
+
+    .scene-rail-text {
+        gap: 0;
+    }
+
+    .scene-rail-text strong {
+        font-size: 8px;
+        letter-spacing: 0.16em;
+        white-space: nowrap;
+    }
+
+    .scene-rail-text small {
+        display: none;
+    }
+
+    .scene-rail-item.active {
+        border-color: rgba(255,255,255,0.42);
+        background: rgba(255,255,255,0.10);
+    }
+
+    .secret-eyes {
+        right: 14px;
+        bottom: 14px;
+
+        width: 46px;
+        height: 46px;
+    }
+
+}
+
+/* =====================================================
+   MOBILE SECRET BUTTON FIX
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .secret-eyes {
+        top: 14px;
+        right: 14px;
+
+        bottom: auto;
+        left: auto;
+
+        width: 42px;
+        height: 42px;
+    }
+
+}
+
+/* =====================================================
+   MOBILE VARIANTS — FIT 4 ITEMS
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .scene-rail {
+        gap: 6px;
+    }
+
+    .scene-rail-item {
+        flex: 1 1 0;
+
+        width: 0;
+        min-width: 0;
+
+        padding: 0 6px;
+
+        justify-content: center;
+    }
+
+    .scene-rail-text {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .scene-rail-text strong {
+        font-size: 7px;
+        letter-spacing: 0.10em;
+    }
+
+}
+
+/* =====================================================
+   MOBILE CENTER POLISH
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    /* Заголовок сцены */
+    .scene-info .scene-label {
+        font-size: 38px;
+        letter-spacing: 0.12em;
+        line-height: 1.05;
+    }
+
+    /* Описание под названием */
+    .scene-info .scene-description {
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        line-height: 1.5;
+    }
+
+    /* F11 на телефоне не нужен */
+    .experience-hint {
+        display: none !important;
+    }
+
+    /* Чуть компактнее PLAY */
+    .play-button {
+        width: 68px;
+        height: 68px;
+    }
+
+    /* Блок громкости немного уже */
+    .audio-controls {
+        transform: scale(0.94);
+        transform-origin: center;
+    }
+
+}
+
+/* =====================================================
+   MOBILE LANDSCAPE
+   ===================================================== */
+
+@media (orientation: landscape) and (max-height: 500px) {
+
+    /* RELAX */
+    .brand {
+        top: 18px;
+        font-size: 10px;
+    }
+
+
+    /* Центральный текст */
+    .scene-info {
+        top: 42%;
+    }
+
+    .scene-info .scene-label {
+        font-size: 34px;
+        line-height: 1;
+        letter-spacing: 0.14em;
+    }
+
+    .scene-info .scene-description {
+        font-size: 8px;
+        margin-top: 10px;
+    }
+
+
+    /* PLAY */
+    .play-button {
+        width: 58px;
+        height: 58px;
+    }
+
+    /* F11 / подсказки убираем */
+    .experience-hint {
+        display: none !important;
+    }
+
+
+    /* Варианты сцены — горизонтально */
+    .scene-rail {
+        left: 18px;
+        right: 18px;
+
+        top: auto;
+        bottom: 64px;
+
+        width: auto;
+        height: 38px;
+
+        transform: none;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 0;
+
+        pointer-events: auto;
+    }
+
+    .scene-rail-title,
+    .scene-rail-line {
+        display: none;
+    }
+
+    .scene-rail-item {
+        flex: 0 1 105px;
+
+        width: 105px;
+        min-width: 0;
+        height: 34px;
+
+        padding: 0 8px;
+
+        justify-content: center;
+
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 999px;
+
+        background: rgba(0,0,0,0.22);
+
+        transform: none;
+    }
+
+    .scene-rail-item:hover {
+        transform: none;
+    }
+
+    .scene-rail-dot {
+        display: none;
+    }
+
+    .scene-rail-text {
+        align-items: center;
+        text-align: center;
+    }
+
+    .scene-rail-text strong {
+        font-size: 7px;
+        letter-spacing: 0.10em;
+    }
+
+    .scene-rail-text small {
+        display: none;
+    }
+
+
+    /* Секретная кнопка наверх */
+    .secret-eyes {
+        top: 12px;
+        right: 12px;
+
+        bottom: auto;
+
+        width: 38px;
+        height: 38px;
+    }
+
+}
+
+/* =====================================================
+   MOBILE LANDSCAPE — BOTTOM ROWS FIX
+   ===================================================== */
+
+@media (orientation: landscape) and (max-height: 500px) {
+
+    /* Подварианты поднимаем выше */
+    .scene-rail {
+        bottom: 92px;
+        height: 32px;
+        gap: 8px;
+    }
+
+    .scene-rail-item {
+        height: 30px;
+        max-width: 92px;
+    }
+
+    .scene-rail-text strong {
+        font-size: 6px;
+        letter-spacing: 0.08em;
+    }
+
+    /* Основные сцены оставляем в самом низу */
+    .scene-selector {
+        bottom: 14px;
+    }
+
+}
+
+/* =====================================================
+   LANDSCAPE — AUDIO BESIDE PLAY
+   ===================================================== */
+
+@media (orientation: landscape) and (max-height: 500px) {
+
+    .audio-controls {
+        position: fixed;
+
+        left: 64%;
+        bottom: 130px;
+
+        top: auto;
+        right: auto;
+
+        transform:
+            translateX(-50%)
+            scale(0.56);
+
+        transform-origin: center;
+
+        z-index: 12;
+    }
+
+}
+
+/* =====================================================
+   DESKTOP POLISH
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    /* ---------- LEFT VARIANT MENU ---------- */
+
+    .scene-rail {
+        left: 36px;
+        width: 210px;
+    }
+
+    .scene-rail-title {
+        color: rgba(255,255,255,0.48);
+    }
+
+    .scene-rail-item {
+        width: 210px;
+    }
+
+    .scene-rail-text strong {
+        color: rgba(255,255,255,0.72);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.45);
+    }
+
+    .scene-rail-text small {
+        color: rgba(255,255,255,0.42);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.45);
+    }
+
+    .scene-rail-item.active .scene-rail-text strong {
+        color: rgba(255,255,255,1);
+    }
+
+
+    /* ---------- SMALL HINTS ---------- */
+
+    .experience-hint {
+        opacity: 0.72;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.65);
+    }
+
+
+    /* ---------- BOTTOM SCENE BUTTONS ---------- */
+
+    .scene-selector button {
+        background: rgba(0,0,0,0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .scene-selector button:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — LEFT MENU FINAL
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-rail {
+        left: 30px;
+
+        width: 220px;
+        height: 320px;
+
+        padding:
+            32px
+            18px
+            28px
+            18px;
+
+        border:
+            1px solid rgba(255,255,255,0.07);
+
+        border-radius: 20px;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(10,10,10,0.38) 0%,
+                rgba(10,10,10,0.28) 70%,
+                rgba(10,10,10,0.18) 100%
+            );
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        box-shadow:
+            0 18px 55px rgba(0,0,0,0.18);
+
+        overflow: hidden;
+    }
+
+
+    .scene-rail-title {
+        left: 18px;
+
+        color:
+            rgba(255,255,255,0.72);
+
+        text-shadow:
+            0 2px 12px rgba(0,0,0,0.75);
+    }
+
+
+    .scene-rail-line {
+        left: 23px;
+
+        background:
+            linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.08),
+                rgba(255,255,255,0.38),
+                rgba(255,255,255,0.08)
+            );
+    }
+
+
+    .scene-rail-item {
+        width: 190px;
+
+        padding-left: 32px;
+
+        border-radius: 12px;
+    }
+
+
+    .scene-rail-text strong {
+        font-size: 10px;
+
+        color:
+            rgba(255,255,255,0.76);
+
+        text-shadow:
+            0 2px 10px rgba(0,0,0,0.8);
+    }
+
+
+    .scene-rail-text small {
+        font-size: 8px;
+
+        color:
+            rgba(255,255,255,0.48);
+
+        text-shadow:
+            0 2px 8px rgba(0,0,0,0.8);
+    }
+
+
+    .scene-rail-dot {
+        left: 20px;
+
+        background:
+            rgba(255,255,255,0.38);
+    }
+
+
+    .scene-rail-item.active {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,0.09),
+                rgba(255,255,255,0.025)
+            );
+
+        box-shadow:
+            inset 0 0 0 1px
+            rgba(255,255,255,0.035);
+    }
+
+
+    .scene-rail-item.active
+    .scene-rail-text strong {
+        color: #fff;
+    }
+
+
+    .scene-rail-item.active
+    .scene-rail-text small {
+        color:
+            rgba(255,255,255,0.68);
+    }
+
+
+    .scene-rail-item.active
+    .scene-rail-dot {
+        background: #fff;
+
+        box-shadow:
+            0 0 7px rgba(255,255,255,0.8),
+            0 0 16px rgba(255,255,255,0.35);
+    }
+
+
+    .scene-rail-item:hover {
+        background:
+            rgba(255,255,255,0.045);
+    }
+
+}
+    /* RAIN / CITY / FOREST / OCEAN title */
+
+    .scene-rail-title {
+        left: 18px;
+
+        color: rgba(255,255,255,0.70);
+
+        text-shadow:
+            0 2px 12px rgba(0,0,0,0.8);
+    }
+
+
+    /* Вертикальная линия */
+
+    .scene-rail-line {
+        left: 23px;
+
+        background:
+            linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.12),
+                rgba(255,255,255,0.50),
+                rgba(255,255,255,0.12)
+            );
+    }
+
+
+    /* Кнопки */
+
+    .scene-rail-item {
+        width: 190px;
+
+        padding-left: 32px;
+
+        border-radius: 12px;
+    }
+
+
+    /* Основное название */
+
+    .scene-rail-text strong {
+        color: rgba(255,255,255,0.72);
+
+        text-shadow:
+            0 2px 10px rgba(0,0,0,0.9);
+    }
+
+
+    /* Маленькое описание */
+
+    .scene-rail-text small {
+        color: rgba(255,255,255,0.48);
+
+        text-shadow:
+            0 2px 8px rgba(0,0,0,0.9);
+    }
+
+
+    /* Точки */
+
+    .scene-rail-dot {
+        left: 20px;
+
+        background:
+            rgba(255,255,255,0.42);
+    }
+
+
+    /* Активный вариант */
+
+    .scene-rail-item.active {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,0.10),
+                rgba(255,255,255,0.02)
+            );
+    }
+
+    .scene-rail-item.active
+    .scene-rail-text strong {
+        color: #fff;
+    }
+
+    .scene-rail-item.active
+    .scene-rail-text small {
+        color: rgba(255,255,255,0.68);
+    }
+
+    .scene-rail-item.active
+    .scene-rail-dot {
+        background: #fff;
+
+        box-shadow:
+            0 0 8px rgba(255,255,255,0.9),
+            0 0 20px rgba(255,255,255,0.45);
+    }
+
+
+    /* Наведение */
+
+    .scene-rail-item:hover {
+        background:
+            rgba(255,255,255,0.06);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — LEFT MENU MICRO POLISH
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-rail-title {
+        font-size: 10px;
+        letter-spacing: 0.42em;
+        color: rgba(255,255,255,0.82);
+    }
+
+    .scene-rail-item.active {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,0.12),
+                rgba(255,255,255,0.03)
+            );
+    }
+
+    .scene-rail-item.active
+    .scene-rail-text strong {
+        text-shadow:
+            0 0 10px rgba(255,255,255,0.18),
+            0 2px 10px rgba(0,0,0,0.85);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — LEFT MENU TITLE
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-rail-title {
+        left: 50%;
+        top: 14px;
+
+        width: 100%;
+
+        transform: translateX(-50%);
+
+        text-align: center;
+
+        font-size: 10px;
+        letter-spacing: 0.42em;
+
+        color: rgba(255,255,255,0.82);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — MAIN UI RECOMPOSITION
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    /* -------------------------------------------------
+       SCENE TITLE — немного выше
+       ------------------------------------------------- */
+
+    .scene-info {
+        top: 32%;
+    }
+
+    .scene-info .scene-label {
+        margin-bottom: 12px;
+    }
+
+    .scene-info .scene-description {
+        margin-top: 0;
+    }
+
+
+/* -------------------------------------------------
+   VOLUME — справа, вертикально
+   ------------------------------------------------- */
+
+.audio-controls {
+    position: fixed;
+
+    top: 50%;
+    right: 30px;
+    left: auto;
+    bottom: auto;
+
+    width: 58px;
+    height: 220px;
+
+    margin: 0;
+    padding: 14px 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    transform: translateY(-50%);
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    border-radius: 30px;
+
+    background:
+        rgba(8,8,8,0.28);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.18);
+
+    z-index: 20;
+}
+
+
+/* Кнопка звука сверху */
+
+.audio-controls .mute-button {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    margin: 0;
+}
+
+
+/* Контейнер вертикального ползунка */
+
+.audio-controls .volume-track {
+    position: relative;
+
+    width: 24px;
+    height: 120px;
+
+    flex: 0 0 120px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Сам ползунок */
+
+.audio-controls .volume-slider {
+    position: absolute;
+
+    width: 110px;
+    height: 3px;
+
+    margin: 0;
+
+    transform: rotate(-90deg);
+    transform-origin: center;
+
+    cursor: pointer;
+}
+
+
+/* Процент снизу */
+
+.audio-controls .volume-value {
+    min-width: 0;
+
+    font-size: 9px;
+    letter-spacing: 0.06em;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    opacity: 0.7;
+}
+    /* Процент */
+
+    .audio-controls .volume-value,
+    .audio-controls [class*="volume-value"] {
+        font-size: 9px;
+
+        text-align: center;
+
+        white-space: nowrap;
+    }
+
+
+    /* -------------------------------------------------
+       BOTTOM SCENES
+       ------------------------------------------------- */
+
+    .scene-selector {
+        bottom: 48px;
+    }
+
+
+    /* -------------------------------------------------
+       HINTS — под RAIN / CITY / FOREST / OCEAN
+       ------------------------------------------------- */
+
+    .experience-hint {
+        position: fixed;
+
+        left: 50%;
+        bottom: 14px;
+
+        top: auto;
+        right: auto;
+
+        transform: translateX(-50%);
+
+        width: max-content;
+
+        opacity: 0.68;
+
+        font-size: 9px;
+
+        white-space: nowrap;
+
+        z-index: 10;
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — HINT UNDER RAIN
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .experience-hint {
+        left: calc(50% - 215px);
+        bottom: 14px;
+
+        transform: none;
+
+        width: max-content;
+
+        text-align: left;
+        white-space: nowrap;
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — PLAY BUTTON LOWER
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .play-button {
+        transform: translateY(42px);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — CENTER TYPOGRAPHY FINAL
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-info {
+        width: min(1100px, 72vw);
+
+        left: 50%;
+        transform: translateX(-50%);
+
+        text-align: center;
+    }
+
+
+    /* HEAVY RAIN / ROOFTOP / NIGHT CITY */
+
+    .scene-info .scene-label {
+        margin: 0;
+
+        font-size:
+            clamp(58px, 5vw, 88px);
+
+        font-weight: 300;
+
+        line-height: 0.96;
+
+        letter-spacing: 0.16em;
+
+        white-space: nowrap;
+
+        color:
+            rgba(255,255,255,0.96);
+
+        text-shadow:
+            0 3px 25px rgba(0,0,0,0.18);
+    }
+
+
+    /* Описание */
+
+    .scene-info .scene-description {
+        margin-top: 20px;
+
+        font-size: 10px;
+
+        font-weight: 500;
+
+        line-height: 1.4;
+
+        letter-spacing: 0.30em;
+
+        color:
+            rgba(255,255,255,0.72);
+
+        text-shadow:
+            0 2px 12px rgba(0,0,0,0.45);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — SCENE DESCRIPTION STRONGER
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-info .scene-description {
+        margin-top: 18px;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        letter-spacing: 0.26em;
+
+        color: rgba(255,255,255,0.90);
+
+        text-shadow:
+            0 2px 8px rgba(0,0,0,0.85),
+            0 0 18px rgba(0,0,0,0.45);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — SCENE DESCRIPTION GLASS
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    .scene-info .scene-description {
+        display: inline-block;
+
+        margin-top: 18px;
+        padding: 7px 14px 8px;
+
+        border:
+            1px solid rgba(255,255,255,0.08);
+
+        border-radius: 999px;
+
+        background:
+    rgba(0,0,0,0.10);
+
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+        box-shadow:
+            0 6px 20px rgba(0,0,0,0.10);
+
+        font-size: 12px;
+        font-weight: 600;
+
+        letter-spacing: 0.24em;
+
+        color:
+            rgba(255,255,255,0.92);
+
+        text-shadow:
+            0 2px 8px rgba(0,0,0,0.75);
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — BOTTOM SCENE NAV FINAL
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    /* Все RAIN / CITY / FOREST / OCEAN */
+
+    .scene-selector button {
+        border:
+            1px solid rgba(255,255,255,0.10);
+
+        background:
+            rgba(8,8,8,0.16);
+
+        color:
+            rgba(255,255,255,0.52);
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        box-shadow:
+            0 6px 24px rgba(0,0,0,0.10);
+
+        transition:
+            color 0.35s ease,
+            background 0.35s ease,
+            border-color 0.35s ease,
+            transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.35s ease;
+    }
+
+
+    /* Наведение */
+
+    .scene-selector button:hover {
+        color:
+            rgba(255,255,255,0.88);
+
+        border-color:
+            rgba(255,255,255,0.22);
+
+        background:
+            rgba(255,255,255,0.07);
+
+        transform:
+            translateY(-2px);
+    }
+
+
+    /* Активная сцена */
+
+    .scene-selector button.active {
+        color: #fff;
+
+        border-color:
+            rgba(255,255,255,0.38);
+
+        background:
+            rgba(255,255,255,0.11);
+
+        box-shadow:
+            0 8px 28px rgba(0,0,0,0.16),
+            inset 0 0 0 1px rgba(255,255,255,0.035),
+            0 0 22px rgba(255,255,255,0.055);
+
+        transform:
+            translateY(-2px);
+    }
+
+}
+
+/* =====================================================
+   LOADING SCREEN — FINAL
+   ===================================================== */
+
+.loading-screen {
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,0.035) 0%,
+            rgba(255,255,255,0.012) 22%,
+            rgba(0,0,0,0) 48%
+        ),
+        #070707;
+}
+
+
+/* Центральный блок */
+
+.loading-content {
+    width: min(360px, 70vw);
+}
+
+
+/* RELAX */
+
+.loading-brand {
+    font-size: 20px;
+    font-weight: 400;
+
+    letter-spacing: 0.60em;
+
+    color: rgba(255,255,255,0.95);
+
+    text-shadow:
+        0 0 22px rgba(255,255,255,0.14);
+
+    margin-bottom: 30px;
+}
+
+/* Линия */
+
+.loading-line {
+    position: relative;
+
+    width: 320px;
+    max-width: 70vw;
+
+    height: 1px;
+
+    margin: 0 auto;
+
+    overflow: visible;
+
+    background: rgba(255,255,255,0.20);
+}
+
+/* Реальный progress */
+
+.loading-progress {
+    position: relative;
+
+    height: 100%;
+
+    background:
+        rgba(255,255,255,0.82);
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.30);
+
+    transition:
+        width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* Небольшой свет на конце прогресса */
+
+.loading-progress::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    top: 50%;
+
+    width: 30px;
+    height: 5px;
+
+    transform: translateY(-50%);
+
+    background:
+        radial-gradient(
+            ellipse at right,
+            rgba(255,255,255,0.32),
+            transparent 70%
+        );
+}
+
+
+/* LOADING */
+
+.loading-text {
+    margin-top: 18px;
+
+    font-size: 10px;
+    font-weight: 500;
+
+    letter-spacing: 0.46em;
+
+    color: rgba(255,255,255,0.62);
+
+    animation:
+        loadingTextPulse 2.2s ease-in-out infinite;
+}
+
+/* Secret-кнопку не показываем поверх загрузки */
+
+.loading-screen:not(.hidden)
+~ .app
+.secret-eyes {
+    opacity: 0 !important;
+
+    pointer-events: none !important;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+    .loading-content {
+        width: 68vw;
+    }
+
+    .loading-brand {
+        font-size: 13px;
+        letter-spacing: 0.48em;
+
+        margin-bottom: 22px;
+    }
+
+    .loading-text {
+        font-size: 7px;
+    }
+
+}
+
+/* =====================================================
+   LOADING SCREEN — TEXT PULSE
+   ===================================================== */
+
+@keyframes loadingTextPulse {
+
+    0%,
+    100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+/* =====================================================
+   LOADING → SCENE CINEMATIC TRANSITION
+   ===================================================== */
+
+.loading-screen {
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 1.15s;
+}
+
+
+/* Сам блок RELAX / линия / LOADING */
+
+.loading-content {
+    opacity: 1;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+    filter: blur(0);
+
+    transition:
+        opacity 0.75s ease,
+        transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.8s ease;
+}
+
+
+/* Начало появления сцены */
+
+.loading-screen.hidden {
+    display: flex;
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
+
+/* RELAX мягко растворяется */
+
+.loading-screen.hidden .loading-content {
+    opacity: 0;
+
+    transform:
+        translateY(-8px)
+        scale(0.985);
+
+    filter: blur(4px);
+}
+
+
+/* Линия слегка исчезает отдельно */
+
+.loading-screen.hidden .loading-line {
+    opacity: 0;
+
+    transition:
+        opacity 0.45s ease;
+}
+
+
+/* На случай reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .loading-screen,
+    .loading-content {
+        transition: none;
+    }
+
+}
+
+/* =====================================================
+   SCENE CHANGE — CINEMATIC UI TRANSITION
+   ===================================================== */
+
+/* ---------- LEFT VARIANT MENU ---------- */
+
+.scene-rail-title,
+.scene-rail-text,
+.scene-rail-dot {
+    transition:
+        opacity 0.26s ease,
+        filter 0.32s ease,
+        transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* Старое содержимое уходит */
+
+
+/* ---------- BOTTOM SCENE BUTTON ---------- */
+
+/*
+ * Без движения всей кнопки —
+ * только короткое изменение яркости,
+ * чтобы не конфликтовать с hover/active.
+ */
+
+.scene-selector button.active {
+    animation:
+        sceneButtonActivate 0.55s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+@keyframes sceneButtonActivate {
+
+    0% {
+        filter:
+            brightness(0.82);
+    }
+
+    45% {
+        filter:
+            brightness(1.16);
+    }
+
+    100% {
+        filter:
+            brightness(1);
+    }
+
+}
+
+
+
+/* ---------- REDUCED MOTION ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .scene-info,
+    .scene-label,
+    .scene-description,
+    .scene-rail-title,
+    .scene-rail-text,
+    .scene-rail-dot {
+        transition: none !important;
+    }
+
+    .scene-selector button.active {
+        animation: none !important;
+    }
+
+}
+
+/* =====================================================
+   SCENE TITLE — SMOOTH TRANSITION
+   ===================================================== */
+
+.scene-info {
+    transition:
+        opacity 0.32s ease,
+        transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene-label {
+    transition:
+        filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene-description {
+    transition:
+        filter 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   PLAY BUTTON — SOFTER
+   ===================================================== */
+
+.play-button {
+    opacity: 0.78;
+
+    background:
+        rgba(8,8,8,0.22);
+
+    border-color:
+        rgba(255,255,255,0.18);
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    transition:
+        opacity 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.play-button:hover {
+    opacity: 1;
+
+    background:
+        rgba(8,8,8,0.30);
+
+    border-color:
+        rgba(255,255,255,0.30);
+}
+
+/* =====================================================
+   VARIANT ITEMS — ACTIVE POLISH
+   ===================================================== */
+
+.scene-rail-item {
+    transition:
+        background 0.32s ease,
+        border-color 0.32s ease,
+        opacity 0.32s ease,
+        transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene-rail-item:not(.active) {
+    opacity: 0.72;
+}
+
+.scene-rail-item:hover {
+    opacity: 1;
+}
+
+.scene-rail-item.active {
+    opacity: 1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.12),
+            rgba(255,255,255,0.025)
+        );
+
+    transform:
+        translateX(3px);
+}
+
+.scene-rail-item.active .scene-rail-dot {
+    transform:
+        scale(1.18);
+
+    box-shadow:
+        0 0 14px rgba(255,255,255,0.28);
+}
+
+.scene-rail-item.active .scene-rail-text strong {
+    color:
+        rgba(255,255,255,0.98);
+}
+
+.scene-rail-item.active .scene-rail-text small {
+    color:
+        rgba(255,255,255,0.62);
+}
+
+/* =====================================================
+   LEFT MENU — INITIAL ENTRANCE
+   ===================================================== */
+
+@media (min-width: 901px) {
+
+    /* Пока идёт LOADING — меню полностью скрыто */
+    .loading-screen:not(.hidden) ~ .app .scene-rail {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+
+    /* После загрузки — плавное появление */
+    .loading-screen.hidden ~ .app .scene-rail {
+        visibility: visible;
+
+        animation:
+            sceneRailEntrance 0.9s
+            cubic-bezier(0.22, 1, 0.36, 1)
+            0.38s
+            both;
+    }
+
+}
+
+
+@keyframes sceneRailEntrance {
+
+    from {
+        opacity: 0;
+
+        filter:
+            blur(6px);
+
+        transform:
+            translateY(-50%)
+            translateX(-14px);
+    }
+
+    to {
+        opacity: 1;
+
+        filter:
+            blur(0);
+
+        transform:
+            translateY(-50%)
+            translateX(0);
+    }
+
+}
+
+/* =====================================================
+   TABLET / SMALL DESKTOP — 601px → 900px
+   ===================================================== */
+
+@media (min-width: 601px) and (max-width: 900px) and (min-height: 501px) {
+
+    /* -------------------------------------------------
+       CENTER CONTENT
+       ------------------------------------------------- */
+
+    .scene-info {
+        left: 53%;
+        top: 34%;
+
+        width: 68vw;
+        max-width: 680px;
+
+        transform: translateX(-50%);
+
+        text-align: center;
+    }
+
+
+    .scene-info .scene-label {
+        margin: 0;
+
+        font-size: clamp(42px, 6.7vw, 60px);
+        line-height: 1;
+
+        letter-spacing: 0.11em;
+
+        white-space: nowrap;
+    }
+
+
+    .scene-info .scene-description {
+        display: inline-block;
+
+        margin-top: 16px;
+
+        padding: 6px 11px;
+
+        max-width: 68vw;
+
+        font-size: 9px;
+        letter-spacing: 0.20em;
+
+        white-space: nowrap;
+    }
+
+
+    /* -------------------------------------------------
+       PLAY
+       ------------------------------------------------- */
+
+    .play-button {
+        width: 68px;
+        height: 68px;
+
+        transform: translateY(30px);
+    }
+
+
+    /* -------------------------------------------------
+       LEFT VARIANT MENU
+       ------------------------------------------------- */
+
+    .scene-rail {
+        left: 14px;
+        top: 50%;
+
+        width: 168px;
+        height: 270px;
+
+        padding:
+            28px 12px
+            22px 12px;
+
+        transform:
+            translateY(-50%);
+
+        border-radius: 17px;
+    }
+
+
+    .scene-rail-title {
+        font-size: 8px;
+        letter-spacing: 0.34em;
+    }
+
+
+    .scene-rail-item {
+        width: 144px;
+
+        padding-left: 27px;
+    }
+
+
+    .scene-rail-text strong {
+        font-size: 8px;
+    }
+
+
+    .scene-rail-text small {
+        font-size: 7px;
+    }
+
+
+    /* -------------------------------------------------
+       BOTTOM SCENE NAV
+       ------------------------------------------------- */
+
+    .scene-selector {
+        left: 50%;
+        bottom: 18px;
+
+        width: min(500px, 62vw);
+
+        transform:
+            translateX(-50%);
+    }
+
+
+    .scene-selector .scene {
+        min-width: 0;
+
+        padding:
+            8px 12px;
+
+        font-size: 9px;
+    }
+
+
+    /* Подсказка F11 здесь уже лишняя */
+
+    .experience-hint {
+        display: none;
+    }
+
+
+    /* -------------------------------------------------
+       VOLUME
+       ------------------------------------------------- */
+
+    .audio-controls {
+        position: fixed;
+
+        right: 14px;
+        left: auto;
+
+        top: 50%;
+        bottom: auto;
+
+        transform:
+            translateY(-50%)
+            scale(0.82);
+
+        transform-origin:
+            center right;
+    }
+
+
+    /* -------------------------------------------------
+       SECRET BUTTON
+       ------------------------------------------------- */
+
+    .secret-eyes {
+        right: 14px;
+        bottom: 14px;
+
+        width: 54px;
+        height: 54px;
+    }
+
+}
