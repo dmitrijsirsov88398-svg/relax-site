@@ -5285,3 +5285,70 @@ button,
             0.72s both !important;
     }
 }
+
+/* =====================================================
+   RELAX — SEO SECTION VISIBILITY FIX
+   Keeps the app fullscreen while allowing the SEO section
+   below it to remain visible and accessible to visitors.
+   ===================================================== */
+
+html,
+body {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.app {
+    height: 100vh;
+    min-height: 100svh;
+}
+
+.seo-intro {
+    position: relative;
+    z-index: 10;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 64px;
+    text-align: center;
+    background: #090909;
+    color: rgba(255, 255, 255, 0.72);
+    opacity: 1;
+}
+
+.seo-intro h1 {
+    margin: 0 0 14px;
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.03em;
+}
+
+.seo-intro p {
+    margin: 0 auto;
+    max-width: 680px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.58);
+}
+
+@media (max-width: 600px) {
+    .seo-intro {
+        padding: 44px 20px 52px;
+    }
+
+    .seo-intro h1 {
+        font-size: 18px;
+    }
+
+    .seo-intro p {
+        font-size: 12px;
+    }
+}
