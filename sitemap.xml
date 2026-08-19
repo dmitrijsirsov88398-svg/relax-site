@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
     <url>
         <loc>https://dmitrijsirsov88398-svg.github.io/relax-site/</loc>
-        <lastmod>2026-08-19</lastmod>
     </url>
+
     <url>
         <loc>https://dmitrijsirsov88398-svg.github.io/relax-site/rain/</loc>
-        <lastmod>2026-08-19</lastmod>
     </url>
+
+    <url>
+        <loc>https://dmitrijsirsov88398-svg.github.io/relax-site/city/</loc>
+    </url>
+
+    <url>
+        <loc>https://dmitrijsirsov88398-svg.github.io/relax-site/forest/</loc>
+    </url>
+
+    <url>
+        <loc>https://dmitrijsirsov88398-svg.github.io/relax-site/ocean/</loc>
+    </url>
+
 </urlset>
