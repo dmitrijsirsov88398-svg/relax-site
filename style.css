@@ -5287,68 +5287,70 @@ button,
 }
 
 /* =====================================================
-   RELAX — SEO SECTION VISIBILITY FIX
-   Keeps the app fullscreen while allowing the SEO section
-   below it to remain visible and accessible to visitors.
+   RELAX INTERNAL SEO LINKS
    ===================================================== */
 
-html,
-body {
-    height: auto;
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
+.seo-links {
+    margin-top: 28px;
 }
 
-body::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+.seo-links-title {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.38);
 }
 
-.app {
-    height: 100vh;
-    min-height: 100svh;
+.seo-links-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 18px;
 }
 
-.seo-intro {
+.seo-links-list a {
     position: relative;
-    z-index: 10;
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 56px 24px 64px;
-    text-align: center;
-    background: #090909;
-    color: rgba(255, 255, 255, 0.72);
-    opacity: 1;
+    color: rgba(255, 255, 255, 0.68);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    transition: color 0.25s ease, opacity 0.25s ease;
 }
 
-.seo-intro h1 {
-    margin: 0 0 14px;
-    font-size: clamp(18px, 2.4vw, 24px);
-    font-weight: 400;
-    line-height: 1.35;
-    letter-spacing: 0.03em;
+.seo-links-list a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.28);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
 }
 
-.seo-intro p {
-    margin: 0 auto;
-    max-width: 680px;
-    font-size: 13px;
-    line-height: 1.75;
-    color: rgba(255, 255, 255, 0.58);
+.seo-links-list a:hover {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.seo-links-list a:hover::after {
+    transform: scaleX(1);
 }
 
 @media (max-width: 600px) {
-    .seo-intro {
-        padding: 44px 20px 52px;
+    .seo-links {
+        margin-top: 24px;
     }
 
-    .seo-intro h1 {
-        font-size: 18px;
+    .seo-links-list {
+        gap: 12px 16px;
     }
 
-    .seo-intro p {
-        font-size: 12px;
+    .seo-links-list a {
+        font-size: 11px;
     }
 }
